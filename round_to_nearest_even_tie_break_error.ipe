@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.7">
-<info created="D:20180209141659" modified="D:20201031103051"/>
+<info created="D:20180209141659" modified="D:20201031104257"/>
 <preamble>\usepackage{amsmath,amssymb,bbm,bm}
 \usepackage{libertine}
 \usepackage[libertine]{newtxmath}</preamble>
@@ -389,12 +389,12 @@ h
 </path>
 </group>
 </group>
-<text transformations="translations" pos="192 144" stroke="black" type="label" width="4.996" height="4.34" depth="2.32" halign="center" valign="baseline" style="math">y</text>
-<text matrix="1 0 0 1 -128 0" transformations="translations" pos="192 144" stroke="black" type="label" width="25.04" height="6.138" depth="2.32" halign="center" valign="baseline" style="math">y - 2\varsigma</text>
-<text matrix="1 0 0 1 128 0" transformations="translations" pos="192 144" stroke="black" type="label" width="24.323" height="6.138" depth="2.32" halign="center" valign="baseline" style="math">y + 2\varsigma</text>
-<text matrix="1 0 0 1 -64 0" transformations="translations" pos="192 144" stroke="black" type="label" width="20.408" height="4.34" depth="2.32" halign="center" valign="baseline" style="math">y - \varsigma</text>
-<text matrix="1 0 0 1 64 0" transformations="translations" pos="192 144" stroke="black" type="label" width="19.69" height="4.958" depth="2.32" halign="center" valign="baseline" style="math">y + \varsigma</text>
-<text matrix="1 0 0 1 -24 0" transformations="translations" pos="192 144" stroke="black" type="label" width="7.742" height="6.932" depth="2.32" halign="center" valign="baseline" style="math">\varsigma&apos;</text>
+<text matrix="1 0 0 1 0 4" transformations="translations" pos="192 144" stroke="black" type="label" width="4.497" height="3.904" depth="2.09" halign="center" valign="baseline" size="small" style="math">y</text>
+<text matrix="1 0 0 1 -128 4" transformations="translations" pos="192 144" stroke="black" type="label" width="22.536" height="5.522" depth="2.09" halign="center" valign="baseline" size="small" style="math">y - 2\varsigma</text>
+<text matrix="1 0 0 1 128 4" transformations="translations" pos="192 144" stroke="black" type="label" width="21.891" height="5.522" depth="2.09" halign="center" valign="baseline" size="small" style="math">y + 2\varsigma</text>
+<text matrix="1 0 0 1 -64 4" transformations="translations" pos="192 144" stroke="black" type="label" width="18.367" height="3.904" depth="2.09" halign="center" valign="baseline" size="small" style="math">y - \varsigma</text>
+<text matrix="1 0 0 1 64 4" transformations="translations" pos="192 144" stroke="black" type="label" width="17.722" height="4.46" depth="2.09" halign="center" valign="baseline" size="small" style="math">y + \varsigma</text>
+<text matrix="1 0 0 1 -24 4" transformations="translations" pos="192 144" stroke="black" type="label" width="7.277" height="6.568" depth="2.09" halign="center" valign="baseline" size="small" style="math">\varsigma&apos;</text>
 <path matrix="1 0 0 1 0 4" stroke="black" arrow="normal/tiny" rarrow="normal/tiny">
 160 152 m
 176 152 l
@@ -479,7 +479,7 @@ h
 64 208 m
 64 160 l
 </path>
-<text matrix="1 0 0 1 -68 48" transformations="translations" pos="192 144" stroke="black" type="label" width="5.111" height="7.03" depth="2.32" halign="center" valign="baseline" style="math">\zeta</text>
-<text matrix="1 0 0 1 -76 40" transformations="translations" pos="192 144" stroke="black" type="label" width="4.498" height="4.343" depth="0.13" halign="center" valign="baseline" style="math">z</text>
+<text matrix="1 0 0 1 -68 48" transformations="translations" pos="192 144" stroke="black" type="label" width="4.6" height="6.325" depth="2.09" halign="center" valign="baseline" size="small" style="math">\zeta</text>
+<text matrix="1 0 0 1 -76 40" transformations="translations" pos="192 144" stroke="black" type="label" width="4.048" height="3.906" depth="0.12" halign="center" valign="baseline" size="small" style="math">z</text>
 </page>
 </ipe>

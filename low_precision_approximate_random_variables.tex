@@ -1,4 +1,4 @@
-\documentclass[manuscript,review,demo]{acmart}
+\documentclass[manuscript,review]{acmart}
 
 \let\Bbbk\undefined % Undefines some symbols for amssymb (e.g. so I can use \blacklozenge)
 \usepackage{amssymb}
@@ -179,21 +179,80 @@
 \section{Introduction}
 \label{sec:introduction}
 
-\todo[inline=true, caption={Introduction}]{
-\begin{enumerate}
-\item Introduction
-\begin{enumerate}
-\item Background to the problem of rounding error and it's build up on stochastic simulation. 
-\item Modelling rounding error by Higham and Trefethen
-\item Previous omissions by Kloedon and Platen and Glasserman
-\item Previous models by Arcinega and Allen and also by Omland et al. 
-\item Previous use of compensation methods for ODEs. 
-\end{enumerate}
-\end{enumerate}
-}
+Rounding error has long been a source of scientific interest (and frustration). For a large fraction of the scientific community, the effects of rounding error are negligible and of little or no consequence. However, for an appreciable fraction of the community, especially those pushing computer hardwares and numerical algorithms to the fastest speeds achievable, rounding error can present a considerable hurdle to the achievable fidelity and speed.
+
+The example \textit{par excellence} of rounding error in scientific computing is in summation operations, frequent in linear algebra applications and to a lesser extent some statistical applications. Calculating the scalar product between two vectors, and thus also calculating vector and matrix multiplications, involves (among other things) summing a list of numbers. Being able to accurate sum a list of numbers has long been under the attention of mathematicians and computer scientists \citep{knuth2014art,kahan1965further,higham1993accuracy,trefethen1997numerical}, and its importance in scientific computing cannot be understated. When the numbers being summed are ill conditioned, the impact of rounding error grows with the problem size, and can quickly nullify even the simplest of calculations, and thus high accuracy summation algorithms are frequently required. Outside of linear algebra, the accuracy of gradient and sensitivity estimates from finite difference methods and numerical differentiation is capped by the maximum available precision due to rounding error. Lastly, for the numerical solution of differential equations by simulation methods (deterministic or stochastic), iterative methods such as the Euler scheme incur rounding errors which get worse as the simulation's discretisation becomes finer. \todo{CIR simulations can be very biases and require very fine path simulations as observed by \citet{broadie2006exact}.}
+
+To combat the effects of rounding error, there are two particularly common approaches. The first is to try and bypass the issue by simply working in a higher precision, typically at the cost of computational speed. Historically this has motivated the introduction of double precision, extended double precision, and even quadruple precision data types. Similarly, several software libraries offer arbitrary levels of precision, such as: the mpmath \citep{mpmath} Python library, the GNU
+multiple precision (GMP) arithmetic C/C++ library \citep{granlund2012gmp}, and the GNU multiple precision binary floating point with correct rounding (MPFR) C library \citep{fousse2007MPFR}. In a similar vein, hardware providers have also focussed efforts on improved floating point accuracy and similarly reproducibility, with notable work by \citet{burgess2018high}.
+
+The second approach to reduce the influence of rounding error is to try and compensate and correct against it. For summations, the best known approach is the Kahan compensated summation \citep{kahan1965further}, although other compensation procedures have also been introduced and well explored \citep{moller1965quasi,knuth2014art,dekker1971floating,neumaier1974rounding,babuska1968numerical,klein2006generalised,linz1970floating,ogita2005accurate}. These proceed by inferring an estimate for the rounding error introduced at each stage of the summation, and then discounting this in the subsequent summations, thus compensating for the rounding error. 
+
+There is a third means of circumventing rounding error, which is more mathematical in its nature, which looks to extrapolate accurate answers from less accurate approximations. The best example of this is Richardson extrapolation \citep{richardson1927viii,marchuk2012difference}. Without this technique, approximation schemes would need to go to such fine discretisations that rounding error would be significant, whereas using Richardson extrapolation is on e possible technique at avoiding encountering rounding error. However, the use of Richardson extrapolation is very problem specific, and whilst it is a very powerful mathematical technique, it does not readily present itself as a general purpose computational tool for avoiding rounding error in most circumstances.  
+
+Both high precision libraries and rounding error compensation schemes have typically been reserved for specialised applications seeking extraordinary high accuracy, and closer to the edges of most scientific computing applications. However, in more recent years there has been an increased demand for ever lower precisions and data types, such as the IEEE half precision floating \citep[\texttt{FP16/binary16}]{ieee2008ieee}, and the more recent ``brain float'' \texttt{bfloat16} \citep{burgess2019bfloat16,kalamkar2019study}. The large driving force behind these is the increasingly popular demand in machine learning applications, where the underlying data is very noisy and imprecise, and smaller data types are preferable for faster accessing, storage, and computation on the latest CPU, GPU, and TPU hardwares. Furthermore, with the greater desire for increased parallelisation on vector hardware and reduced precision calculations, lower precision data types are gaining considerable momentum and traction. 
+
+In order to understand the nature of the nett rounding error arising in calculations, there have been two fronts of development. The first has been defining the precise rounding modes and data types used in scientific calculations. To ensure floating point calculations were standardised, the famous IEEE 754 standard for floating point arithmetic was introduced \citep{ieee1985ieee}, and is now the industry standard. This entails addition, subtraction, multiplication, division, and square roots all producing exact results with respect to the appropriate rounding mode \citep[page~15]{tucker2011validated}. Similarly, the rounding modes a computer uses to round to floating point values are standardised, with round to nearest even typically being the default mode. Of course, while floating point arithmetic may be well defined, there are several difficulties and nuances, as discussed by \citet{goldberg1991every}.
+
+The second front has been with the mathematical modelling of rounding errors. While the IEEE 754 standard specifies the microscopic hardware behaviour, this does not readily give insight into the behaviour of the macroscopic rounding error. Describing the nett effect that results during calculations has received much mathematical attention \citep{higham2002accuracy,wilkinson1961error,wilkinson1974numerical,wilkinson1986error,hull1966tests}, and one of the best overviews of this is by \citet{higham2002accuracy}, who analyses the standard model for deterministic rounding error \citep[2.2, (2.4)]{higham2002accuracy}. Furthermore, in recent years there has been a piqued interest in stochastic rounding modes and associated models, with prominent recent work by \citet{higham2019new} and \citet{ipsen2019probabilistic}, performing probabilistic error analysis, frequently giving tighter and more realistic error bounds than the worst case deterministic scenarios.  
+
+With this wealth of attention from academia and industry, the work we present produces a model for the rounding error incurred during the numerical simulation of stochastic differential equations. Typical treatments of numerical methods for such stochastic differential equations assume no rounding error occurs or is otherwise negligible \citep[9.3, page~316]{kloeden1999numerical} \citep{glasserman2013monte}. The earliest work to compensate for rounding error in simulations for ordinary differential equations appears to be by \citet{vitasek1969numerical}. In the setting of stochastic differential equations, the most relevant works are by \citet{arciniega2003rounding} and \citet{omland2016mixed}. \citet{arciniega2003rounding} present an \textit{ad hoc} statistically motivated model for the rounding error which occurs in the Euler-Maruyama scheme, giving an average case bound for the overall rounding error. \citet{omland2016mixed} takes a more rigorous approach, closer to a first principles approach, starting with the floating point rounding modes and standard error model by \citet{higham2002accuracy}, and produces a worst case bound for the error in the Euler-Maruyama scheme \citep[theorem~4.8]{omland2016mixed}. 
+
+The contribution from our work presented here will be to present a heuristic model for the rounding error in a similar manner to \citet{arciniega2003rounding}. However, our model will be much more rigorously justified by a detailed inspection of dominant rounding errors anticipated in the Euler-Maruyama scheme. Furthermore more, we will show that there are two primary sources of error processes which contribute to the nett error. The first is a zero mean process, similar to that described by \citet{arciniega2003rounding}. The second is a possibly non zero mean systematic error term omitted by \citet{arciniega2003rounding}. This second process is of a much smaller order than the first, but due to its non zero mean nature, its nett contribution will be equal to that arising from the zero mean process. The significance of this new model is that it quantified the permissible systematic rounding errors in the Euler-Maruyama scheme. Furthermore, our model is amenable to incorporation within the nested multilevel Monte Carlo scheme utilising approximate random variables developed by \citeauthor{giles2020approximate} \citep{giles2020approximate,sheridan2020approximate_inverse,sheridan2020approximate_random,sheridan2020nested}. Although work has been done by \citet{brugger2014mixed} and \citet{omland2015exploiting} on constructing multilevel Monte Carlo schemes in the presence of rounding error, our model directly facilitates a treatment jointly allowing for approximate random variables and low precision calculations correctly handed by a nested multilevel Monte Carlo scheme. A secondary contribution of this work will also be to demonstrate the applicability of a Kahan compensated summation within the Euler-Maruyama scheme, an extension of the similar idea by \citet{vitasek1969numerical} in the setting of ordinary differential equations. 
+
+Section~\ref{sec:numerical_solutions_to_stochastic_differential_equations} overviews the numerical solution of stochastic differential equations, providing the primary context and setting of our work. Section~\ref{sec:a_leading_order_error_model} will present our model for the leading order error process arising in the Euler-Maruyama scheme. Section~\ref{sec:multilevel_monte_carlo} will showcase how our model can be incorporated into a multilevel Monte Carlo framework, demonstrating practical applications of the model and showcasing the savings that can be expected using low precisions. Section~\ref{sec:conclusions} presents the conclusions from this work. 
 
 \section{Numerical solutions to stochastic differential equations}
 \label{sec:numerical_solutions_to_stochastic_differential_equations}
+
+As we mentioned in section~\ref{sec:introduction}, there are various settings appropriate for analysing the effects of rounding error, and the numerical solutions of stochastic differential equations is one particularly important setting. Frequently the terminal solution $ X_T $ of the stochastic differential equation $ \dd{X_t} = a(t, X_t) \dd{t} + b(t, X_t)\dd{W_t} $ needs to be approximated for given drift and diffusion processes $ a $ and $ b $. To achieve this, whole path approximations $ \widehat{X}_t \approx X_t $ for $ t \in [0, T] $ are produced, where the most popular methods are the Euler-Maruyama and Milstein schemes. For a thorough  detailing see \citet{kloeden1999numerical} and \citet{glasserman2013monte}. The approximations simulate the process over $ N $ time steps of size $ \Delta t \equiv \delta \coloneqq \tfrac{T}{N} $, where the update at the $ n $-th iteration requires Wiener process increment $ \Delta W_t $. The usual numerical schemes use a standard Gaussian random variable $ Z_n $ to simulate from this process, where $ \Delta W_n \coloneqq \sqrt{\delta} Z_n $.
+
+Unfortunately, sampling from the Gaussian distribution can be expensive, and so there have been several approached to bypass this expense. Most of these look to substitute the exact Gaussian increment $ Z_n $ with another random variable $ \widetilde{Z}_n $ with similar statistics. For clarity and consistency with \citet{giles2020approximate,sheridan2020approximate_inverse}, we call these substitutes \emph{approximate random variables}, and the originals as \emph{exact random variables}. The most well known is to use Rademacher random variables, producing what's known as the weak Euler-Maruyama scheme \citep[page~XXXII]{kloeden1999numerical}, where the Rademacher random variables have the desired mean. More advanced methods are more generalised moment matching procedures, as discussed by \citet{muller1958inverse}, and piecewise polynomial approximations and generalised approximate random variables by  \citet{giles2020approximate,sheridan2020approximate_inverse}. The Euler-Maruyama schemes using the exact Gaussian random variables $ Z_n $ give rise to the approximation $ \widehat{X} $, and the approximate random variables $ \widetilde{Z}_n $ produce $ \widetilde{X} $, where the schemes are 
+\begin{equation*}
+\widehat{X}_{n+1} = \widehat{X}_n + a(t_n, \widehat{X}_n) \delta + b(t_n, \widehat{X}_n)\sqrt{\delta} Z_n
+\qquad \text{and} \qquad 
+\widetilde{X}_{n+1} = \widetilde{X}_n + a(t_n, \widetilde{X}_n) \delta + b(t_n, \widetilde{X}_n)\sqrt{\delta} \widetilde{Z}_n,
+\end{equation*}
+respectively, where $ t_n \coloneqq n \delta $. 
+
+The motivation for introducing these approximate random variables was increased simulation speed. However, for the ultimate speed improvements, it is desirable to both switch to approximate random variables, and decrease the arithmetic precision used, giving a twofold speed improvement. Reducing the precision alone has been explored with applications to field programmable gate arrays  \citep{brugger2014mixed,omland2015exploiting,omland2016mixed,chow2012mixed}, and multilevel Monte Carlo schemes using varying fidelities of approximate random variables \citep{muller1958inverse}. However, performing both simultaneously is touched upon by \citet{giles2019random_multilevel}, although using a quite restrictive truncated uniform random bit Monte Carlo algorithm (extension to more general approximation schemes without varying the precision is done by \citet{giles2020approximate}). However, the work by \citet{giles2019random_multilevel} is primarily a cost most, and does not model the effect of rounding error. \todo{Thus our work is novel in this respect.}
+
+
+In order to describe the effect of rounding error resulting from the Euler-Maruyama scheme, the two most prominent works are by \citet{arciniega2003rounding} and \citet{omland2016mixed}, which are models for the average and worst case errors respectively. \citet{arciniega2003rounding} provide an \textit{ad hoc} statistical model and analysis for the rounding error arising from finite precision floating point calculations within the Euler-Maruyama scheme. Denoting the estimate produced when working in finite precision is denoted $ \overline{X} $, they propose that at the $ n $-th iteration, all of the composite floating point arithmetic in the Euler-Maruyama update culminates in an additive error $ \varepsilon_n $ where
+$ \overline{X}_{n+1} = \overline{X}_n + a(t_n, \overline{X}_n) \delta + b(t_n, \overline{X}_n)\sqrt{\delta} Z_n + \varepsilon_n $.
+This error is assumed to follow a Gaussian distribution, be zero mean, and have a variance $ \mathbb{V}(\varepsilon) \leq C \varrho^2 $, where $ C $ is some constant and $ \varrho $ is the unit roundoff. The main result from their analysis \citep[theorem~2.2]{arciniega2003rounding} is $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN\varrho^2 $. The model from \citet{omland2016mixed} uses a more rigorous finite precision framework. For brevity, letting $ \oplus $ and $ \otimes $ represent floating point addition and multiplication, then the model by \citet{omland2016mixed} in effect considers $ \overline{X}_{n+1} = \overline{X}_n \oplus ((a(t_n, \overline{X}_n) \otimes \delta) \oplus (b(t_n, \overline{X}_n)\otimes (\sqrt{\delta}\otimes Z_n))) $ and produces the worst case bound $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN^2\varrho^2 $.
+
+The model we will present in section~\ref{sec:a_leading_order_error_model} will take the model from \citet{omland2016mixed} as its starting point, but under assumptions appropriate for the Euler-Maruyama scheme, will ultimately reduce to a model closer resembling that by \citet{arciniega2003rounding}.
+
+\todo[inline=true, caption={numerical solutions}]{
+\begin{enumerate}
+\item Stochastic differential equations
+\begin{enumerate}
+\item The need for stochastic simulations.
+\begin{enumerate}
+\item Stochastic systems
+\item The Euler-Maruyama scheme
+\item Exact random variables are expensive, and thus approximate random variables are desirable. 
+\item Double precision is superfluous for most applications, and speeds would be better if single or half precision could be used. (simpler calculations and increased vector parallelisation).
+\item High accuracy means finer path simulations (e.g. CIR process has a high bias), but with low precisions this means rounding error can be substantial. Where is the balance?
+\end{enumerate}
+\item Approximate random variables make things go faster. 
+\begin{enumerate}
+\item Previous work by Mike and me on this and understanding the error. 
+\end{enumerate}
+\item Lower precisions make things go faster. 
+\begin{enumerate}
+\item Previous work by arcinega and allen and omland et al. 
+\end{enumerate}
+\item The Euler-Maruyama scheme has a build up of rounding error.
+\item Models for the rounding error incurred. 
+\begin{enumerate}
+\item The arcinegia and allen model. 
+\item The Omland model.  
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+}
 
 \section{A leading order error model}
 \label{sec:a_leading_order_error_model}
