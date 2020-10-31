@@ -1,0 +1,215 @@
+\documentclass[manuscript,review,demo]{acmart}
+
+\let\Bbbk\undefined % Undefines some symbols for amssymb (e.g. so I can use \blacklozenge)
+\usepackage{amssymb}
+\usepackage[boxed, vlined, linesnumbered, resetcount]{algorithm2e} 
+\usepackage{bm}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{physics}
+\usepackage{subfigure}
+\usepackage[binary-units=true]{siunitx}
+\usepackage{todonotes}
+\usepackage{hyperref} % Should usually be loaded last. 
+
+\newfloat{lstfloat}{htbp}{lop} % To put the listings in. 
+\renewcommand{\lstlistingname}{Code} % Rename them as codes. 
+
+
+\SetAlCapSty{} % Removes bold in caption for consistency. 
+\SetAlCapSkip{0.5em} % Increase algorithm spacing between box and caption.
+\SetAlCapNameFnt{\small\sffamily}
+\SetAlCapFnt{\small\sffamily}
+\SetAlgoCaptionSeparator{.}
+
+% For formatting the C code. 
+\lstdefinestyle{C}{
+    language=C,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\small\ttfamily,
+    morekeywords={omp,simd,reduction,simdlen,declare,inline,bool,restrict,half},
+    otherkeywords={\#pragma,\_\_fp16},
+    frame = single,
+    captionpos=b,
+}
+
+
+\DeclareMathOperator*{\argmin}{argmin} % For argmin. 
+
+\citestyle{acmnumeric} % For the numeric citation style. 
+
+\title{Rounding error using low precision approximate random variables}
+
+\author{Michael Giles}
+\email{mike.giles@maths.ox.ac.uk}
+
+\author{Oliver Sheridan-Methven}
+\email{oliver.sheridan-methven@hotmail.co.uk}
+
+\affiliation{%
+\institution{Mathematical Institute, Oxford University}
+\city{Oxford}
+\country{UK}}
+
+\keywords{approximations, random variables, inverse cumulative distribution functions, random number generation, finite precision, floating point, rounding error, multilevel Monte Carlo, the Euler-Maruyama scheme, the Milstein scheme, and high performance computing.}
+
+\begin{document}
+
+\begin{abstract}
+
+\end{abstract}
+
+% cf. https://dl.acm.org/ccs#
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10002950.10003714.10003715</concept_id>
+       <concept_desc>Mathematics of computing~Numerical analysis</concept_desc>
+       <concept_significance>500</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003705.10011686</concept_id>
+       <concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003705.10003708</concept_id>
+       <concept_desc>Mathematics of computing~Statistical software</concept_desc>
+       <concept_significance>500</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003714.10003736.10003737</concept_id>
+       <concept_desc>Mathematics of computing~Approximation</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003741.10003746</concept_id>
+       <concept_desc>Mathematics of computing~Continuous functions</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010169.10010170.10010173</concept_id>
+       <concept_desc>Computing methodologies~Vector / streaming algorithms</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010341.10010342.10010345</concept_id>
+       <concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010341.10010349.10010345</concept_id>
+       <concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010341.10010349.10010362</concept_id>
+       <concept_desc>Computing methodologies~Massively parallel and high-performance simulations</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+ </ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Mathematics of computing~Numerical analysis}
+\ccsdesc[300]{Mathematics of computing~Mathematical software performance}
+\ccsdesc[500]{Mathematics of computing~Statistical software}
+\ccsdesc[100]{Mathematics of computing~Approximation}
+\ccsdesc[100]{Mathematics of computing~Continuous functions}
+\ccsdesc[100]{Computing methodologies~Vector / streaming algorithms}
+\ccsdesc[300]{Computing methodologies~Uncertainty quantification}
+\ccsdesc[300]{Computing methodologies~Uncertainty quantification}
+\ccsdesc[300]{Computing methodologies~Massively parallel and high-performance simulations}
+
+\maketitle
+
+\clearpage
+\todo[inline=true, caption={general structure}]{
+\centerline{\textbf{General structure}}
+\begin{enumerate}
+\item Abstract
+\item Introduction
+\begin{enumerate}
+\item Background to the problem of rounding error and it's build up on stochastic simulation. 
+\item Modelling rounding error by Higham and Trefethen
+\item Previous omissions by Kloedon and Platen and Glasserman
+\item Previous models by Arcinega and Allen and also by Omland et al. 
+\item Previous use of compensation methods for ODEs. 
+\end{enumerate}
+\item Stochastic differential equations
+\begin{enumerate}
+\item The need for stochastic simulations.
+\item Approximate random variables make things go faster. 
+\begin{enumerate}
+\item Previous work by Mike and me on this and understanding the error. 
+\end{enumerate}
+\item Lower precisions make things go faster. 
+\begin{enumerate}
+\item Previous work by arcinega and allen and omland et al. 
+\end{enumerate}
+\item The Euler-Maruyama scheme has a build up of rounding error. 
+\end{enumerate}
+\item A leading order error model
+\begin{enumerate}
+\item The standard round to nearest even and other assumptions. 
+\item The significant and leading order terms. 
+\item Kahan summation
+\end{enumerate}
+\item Multilevel Monte Carlo 
+\begin{enumerate}
+\item The expected time savings. 
+\item The variance reductions from simulations
+\item The applicability of half precision and Kahan summation version. 
+\item Can I get some C timings for path simulations using (savings from wider vectorisation and also lower precision calculations), using piecewise linear approximation with unions, or the LUT:
+\begin{enumerate}
+\item Double precision 
+\item Single precision 
+\item Half precision
+\item Half precision with Kahan summation. 
+\item Possibly both for the Euler and Milstein and GBM processes. 
+\end{enumerate}
+\item Calculate expected time savings. 
+\end{enumerate}
+\item Conclusions
+\item Acknowledgements 
+\end{enumerate}
+}
+\clearpage
+
+\section{Introduction}
+\label{sec:introduction}
+
+\todo[inline=true, caption={Introduction}]{
+\begin{enumerate}
+\item Introduction
+\begin{enumerate}
+\item Background to the problem of rounding error and it's build up on stochastic simulation. 
+\item Modelling rounding error by Higham and Trefethen
+\item Previous omissions by Kloedon and Platen and Glasserman
+\item Previous models by Arcinega and Allen and also by Omland et al. 
+\item Previous use of compensation methods for ODEs. 
+\end{enumerate}
+\end{enumerate}
+}
+
+\section{Numerical solutions to stochastic differential equations}
+\label{sec:numerical_solutions_to_stochastic_differential_equations}
+
+\section{A leading order error model}
+\label{sec:a_leading_order_error_model}
+
+\section{Multilevel Monte Carlo}
+\label{sec:multilevel_monte_carlo}
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+\section{Acknowledgements}
+\label{sec:acknowledgements}
+
+We would like to acknowledge and thank those who have financially sponsored this work. This includes the Engineering and Physical Sciences Research Council (EPSRC) and Oxford University's centre for doctoral training in Industrially Focused Mathematical Modelling (InFoMM), with the EP/L015803/1 funding grant. Furthermore, this research stems from a PhD project \citep{sheridan2020nested} which was funded by Arm and NAG. Additionally, funding was also provided by the Inference, Computation and Numerics for Insights into Cities (ICONIC) project, and the programme grant EP/P020720/1. Lastly, Mansfield College Oxford also contributed funds.  
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}

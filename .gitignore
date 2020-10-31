@@ -1,0 +1,10 @@
+*.json
+*.pdf
+.idea/
+__pycache__/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.gz
