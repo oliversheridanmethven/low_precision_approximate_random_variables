@@ -2,6 +2,7 @@
 
 \let\Bbbk\undefined % Undefines some symbols for amssymb (e.g. so I can use \blacklozenge)
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage[boxed, vlined, linesnumbered, resetcount]{algorithm2e} 
 \usepackage{bm}
 \usepackage{float}
@@ -25,17 +26,21 @@
 
 % For formatting the C code. 
 \lstdefinestyle{C}{
-    language=C,
-    basicstyle=\small\ttfamily,
-    keywordstyle=\small\ttfamily,
-    morekeywords={omp,simd,reduction,simdlen,declare,inline,bool,restrict,half},
-    otherkeywords={\#pragma,\_\_fp16},
-    frame = single,
-    captionpos=b,
+language=C,
+basicstyle=\small\ttfamily,
+keywordstyle=\small\ttfamily,
+morekeywords={omp,simd,reduction,simdlen,declare,inline,bool,restrict,half},
+otherkeywords={\#pragma,\_\_fp16},
+frame = single,
+captionpos=b,
 }
 
 
 \DeclareMathOperator*{\argmin}{argmin} % For argmin. 
+\newcommand{\indicatorfn}{\vmathbb{1}}
+
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{model}{Model}[section]
 
 \citestyle{acmnumeric} % For the numeric citation style. 
 
@@ -63,52 +68,52 @@
 % cf. https://dl.acm.org/ccs#
 \begin{CCSXML}
 <ccs2012>
-   <concept>
-       <concept_id>10002950.10003714.10003715</concept_id>
-       <concept_desc>Mathematics of computing~Numerical analysis</concept_desc>
-       <concept_significance>500</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003705.10011686</concept_id>
-       <concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003705.10003708</concept_id>
-       <concept_desc>Mathematics of computing~Statistical software</concept_desc>
-       <concept_significance>500</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003714.10003736.10003737</concept_id>
-       <concept_desc>Mathematics of computing~Approximation</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003741.10003746</concept_id>
-       <concept_desc>Mathematics of computing~Continuous functions</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010169.10010170.10010173</concept_id>
-       <concept_desc>Computing methodologies~Vector / streaming algorithms</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010341.10010342.10010345</concept_id>
-       <concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010341.10010349.10010345</concept_id>
-       <concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010341.10010349.10010362</concept_id>
-       <concept_desc>Computing methodologies~Massively parallel and high-performance simulations</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
- </ccs2012>
+<concept>
+<concept_id>10002950.10003714.10003715</concept_id>
+<concept_desc>Mathematics of computing~Numerical analysis</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003705.10011686</concept_id>
+<concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003705.10003708</concept_id>
+<concept_desc>Mathematics of computing~Statistical software</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003714.10003736.10003737</concept_id>
+<concept_desc>Mathematics of computing~Approximation</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+<concept>
+<concept_id>10002950.10003741.10003746</concept_id>
+<concept_desc>Mathematics of computing~Continuous functions</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+<concept>
+<concept_id>10010147.10010169.10010170.10010173</concept_id>
+<concept_desc>Computing methodologies~Vector / streaming algorithms</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+<concept>
+<concept_id>10010147.10010341.10010342.10010345</concept_id>
+<concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10010147.10010341.10010349.10010345</concept_id>
+<concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10010147.10010341.10010349.10010362</concept_id>
+<concept_desc>Computing methodologies~Massively parallel and high-performance simulations</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
 \end{CCSXML}
 
 \ccsdesc[500]{Mathematics of computing~Numerical analysis}
@@ -205,9 +210,12 @@ Section~\ref{sec:numerical_solutions_to_stochastic_differential_equations} overv
 \section{Numerical solutions to stochastic differential equations}
 \label{sec:numerical_solutions_to_stochastic_differential_equations}
 
-As we mentioned in section~\ref{sec:introduction}, there are various settings appropriate for analysing the effects of rounding error, and the numerical solutions of stochastic differential equations is one particularly important setting. Frequently the terminal solution $ X_T $ of the stochastic differential equation $ \dd{X_t} = a(t, X_t) \dd{t} + b(t, X_t)\dd{W_t} $ needs to be approximated for given drift and diffusion processes $ a $ and $ b $. To achieve this, whole path approximations $ \widehat{X}_t \approx X_t $ for $ t \in [0, T] $ are produced, where the most popular methods are the Euler-Maruyama and Milstein schemes. For a thorough  detailing see \citet{kloeden1999numerical} and \citet{glasserman2013monte}. The approximations simulate the process over $ N $ time steps of size $ \Delta t \equiv \delta \coloneqq \tfrac{T}{N} $, where the update at the $ n $-th iteration requires Wiener process increment $ \Delta W_t $. The usual numerical schemes use a standard Gaussian random variable $ Z_n $ to simulate from this process, where $ \Delta W_n \coloneqq \sqrt{\delta} Z_n $.
+As we mentioned in section~\ref{sec:introduction}, there are various settings appropriate for analysing the effects of rounding error, and the numerical solutions of stochastic differential equations is one particularly important setting. Frequently the terminal solution $ X_T $ of the stochastic differential equation $ \dd{X_t} = a(t, X_t) \dd{t} + b(t, X_t)\dd{W_t} $ needs to be approximated for given drift and diffusion processes $ a $ and $ b $. To achieve this, whole path approximations $ \widehat{X}_t \approx X_t $ for $ t \in [0, T] $ are produced, where the most popular methods are the Euler-Maruyama and Milstein schemes. For a thorough  detailing see \citet{kloeden1999numerical} and \citet{glasserman2013monte}. The approximations simulate the process over $ N $ time steps of size $ \Delta t \equiv \delta \coloneqq \tfrac{T}{N} $, where the update at the $ n $-th iteration requires Wiener process increment $ \Delta W_t $. The usual numerical schemes use a standard Gaussian random variable $ Z_n $ to simulate from this process, where $ \Delta W_n \coloneqq \sqrt{\delta} Z_n $. To ensure the stochastic process has a unique strong solution and the Euler-Maruyama scheme converges, we assume the standard assumptions from \citet[4.5]{kloeden1999numerical}, which are that: $ a $ and $ b $ are jointly Lebesgue measurable, spatially Lipschitz continuous, have linear spatial growth, have $ \tfrac{1}{2} $-H\"{o}lder temporal continuity with linear spatial growth, and that $ X $ has a measurable initial condition.
 
-Unfortunately, sampling from the Gaussian distribution can be expensive, and so there have been several approached to bypass this expense. Most of these look to substitute the exact Gaussian increment $ Z_n $ with another random variable $ \widetilde{Z}_n $ with similar statistics. For clarity and consistency with \citet{giles2020approximate,sheridan2020approximate_inverse}, we call these substitutes \emph{approximate random variables}, and the originals as \emph{exact random variables}. The most well known is to use Rademacher random variables, producing what's known as the weak Euler-Maruyama scheme \citep[page~XXXII]{kloeden1999numerical}, where the Rademacher random variables have the desired mean. More advanced methods are more generalised moment matching procedures, as discussed by \citet{muller1958inverse}, and piecewise polynomial approximations and generalised approximate random variables by  \citet{giles2020approximate,sheridan2020approximate_inverse}. The Euler-Maruyama schemes using the exact Gaussian random variables $ Z_n $ give rise to the approximation $ \widehat{X} $, and the approximate random variables $ \widetilde{Z}_n $ produce $ \widetilde{X} $, where the schemes are 
+\subsection{Approximate random variables}
+\label{sec:approximate_random_variables}
+
+Unfortunately, sampling from the Gaussian distribution can be expensive, and so there have been several approached to bypass this expense. Most of these look to substitute the exact Gaussian increment $ Z_n $ with another random variable $ \widetilde{Z}_n $ with similar statistics. For clarity and consistency with \citeauthor{giles2020approximate} \citep{giles2020approximate,sheridan2020approximate_inverse,giles2020approximating}, we call these substitutes \emph{approximate random variables}, and the originals as \emph{exact random variables}. The most well known is to use Rademacher random variables, producing what's known as the weak Euler-Maruyama scheme \citep[page~XXXII]{kloeden1999numerical}, where the Rademacher random variables have the desired mean. More advanced methods include more generalised moment matching procedures, as discussed by \citet{muller1958inverse}, and piecewise polynomial approximations and generalised approximate random variables by \citeauthor{giles2020approximate} \citep{giles2020approximate,sheridan2020approximate_inverse}. The Euler-Maruyama schemes using the exact Gaussian random variables $ Z_n $ give rise to the approximation $ \widehat{X} $, and the approximate random variables $ \widetilde{Z}_n $ produce $ \widetilde{X} $, where the schemes are 
 \begin{equation*}
 \widehat{X}_{n+1} = \widehat{X}_n + a(t_n, \widehat{X}_n) \delta + b(t_n, \widehat{X}_n)\sqrt{\delta} Z_n
 \qquad \text{and} \qquad 
@@ -215,50 +223,320 @@ Unfortunately, sampling from the Gaussian distribution can be expensive, and so 
 \end{equation*}
 respectively, where $ t_n \coloneqq n \delta $. 
 
+One of the approximations we will utilise later is the piecewise linear approximation by \citet{giles2020approximating}. This generates approximate Gaussian random variables by the inverse transform method \citep{glasserman2013monte} using a piecewise linear approximation $ \widetilde{\Phi}^{-1} $ to the Gaussian distribution's inverse cumulative distribution function $ \Phi^{-1} $. The exact construction is detailed by \citet{giles2020approximating}, although an example approximation is demonstrated in figure~\ref{fig:piecewise_linear_approximation}. An approximation $ \widetilde{\Phi}^{-1} \approx \Phi^{-1} $ using 8 intervals is shown in figure~\ref{fig:piecewise_linear_gaussian_approximation}, and the resultant probability density function of the approximation $ \rho $ is shown in figure~\ref{fig:piecewise_linear_gaussian_approximation_pdf}. The probability density function has compact support, and there are a few tiny inaccessible regions with zero measure, as indicated. 
+
+
+\begin{figure}[htb]
+\centering
+\subfigure[A piecewise linear approximation using 8 intervals.\label{fig:piecewise_linear_gaussian_approximation}]{\includegraphics{piecewise_linear_gaussian_approximation}}
+\subfigure[The resultant probability density function with regions of zero measure indicated.\label{fig:piecewise_linear_gaussian_approximation_pdf}]{\includegraphics{piecewise_linear_gaussian_approximation_pdf}}
+\caption{A piecewise linear approximation of the Gaussian distributions inverse cumulative distribution function, and the resultant probability density function.}
+\label{fig:piecewise_linear_approximation}
+\end{figure}
+
+The model we will later propose in section~\ref{sec:a_leading_order_error_model} will hold for both exact Gaussian random variables, and also certain classes of approximate Gaussian random variables, which we will require to satisfy assumption~\ref{asmp:approximate_random_variables}.
+
+
+\begin{assumption}
+\label{asmp:approximate_random_variables}
+Let any approximate Gaussian random variables $ \widetilde{Z} $ be zero mean, uniformly bounded, and have finite variance $ \mathbb{V}(\widetilde{Z}) = O(1) < \infty  $.\todo{also all finite moments are bounded (for convenient lemma)?} Furthermore, let there exist a corresponding probability density function $ \rho $ such that $ \mathbb{P}(Z \in [z, z + \dd{z}]) = \rho(z) \dd{z}$.  Let $ \rho $ be bounded by $ K $ such that $ \rho \leq K < \infty $ and be smooth almost everywhere such that $ \rho \in C^\infty(\mathbb{R}\backslash\mathcal{M})$, where $ \mathcal{M} $ is a finite set of $ M $ points where $ \rho $ is discontinuous. Lastly, let $ \rho $ decay sufficiently fast such that for any finite constant $ \alpha $ that $ \sum_{k=-\infty}^\infty 2^{2k} \max_{y'\in[2^{k}, 2^{k+1}]} \rho(y'-\alpha) < \infty $.
+\end{assumption}
+
+\begin{lemma}
+\label{lemma:exact_gaussian_distribution}
+The exact Gaussian distribution satisfies assumption~\ref{asmp:approximate_random_variables}.
+\end{lemma}
+
+\begin{proof}
+We immediately have that the Gaussian distribution is zero mean and has unit variance, and is uniformly bounded \citep[appendix~C.2]{blundell2014concepts}. The probability density function for the Gaussian distribution is $ \rho \equiv \phi $ where $ \phi(z) \coloneqq \tfrac{1}{\sqrt{2\pi}} {\exp}(-\tfrac{1}{2}z^2) $, which is $ C^\infty(\mathbb{R}) $ and maximal at zero where $ \rho \leq \phi(0) = \tfrac{1}{\sqrt{2\pi}} $. To show $ \sum_{k=-\infty}^\infty 2^{2k} \max_{y'\in[2^{k}, 2^{k+1}]} \rho(y'-\alpha) < \infty $ we note that the summand is increasing as $ k $ increases, and $ \rho $ will be maximal for one index $ k^* $ where $ y' = \alpha $, and for indices $ k > k^* $ the $ \rho $ term will thereafter be decreasing. Thus we can approximate the possibly divergent part of the summation by the integral 
+\begin{equation*}
+\sum_{k=k^* + 1}^\infty 2^{2k} \max_{y'\in[2^{k}, 2^{k+1}]} \rho(y'-\alpha) = \sum_{k=k^* + 1}^\infty 2^{2k}  \rho(2^k-\alpha)
+\approx \int_{2^{k^* + 1}}^\infty  x^2  \phi(x-\alpha) \dd{x}
+\leq \int_{-\infty}^\infty  x^2  \phi(x-\alpha) \dd{x} < \infty.
+\end{equation*}
+The summation can be bounded from above and below by similar integrals, and thus is not divergent. 
+\qedhere
+\end{proof}
+
+\begin{lemma}
+\label{lemma:approximate_gaussian_distribution}
+The approximate Gaussian distribution resulting from the piecewise linear approximation by \citet{giles2020approximating} satisfies assumption~\ref{asmp:approximate_random_variables}.
+\end{lemma}
+
+\begin{proof}
+For a finite number of approximation intervals, we can see from figure~\ref{fig:piecewise_linear_gaussian_approximation_pdf} that the probability density function is symmetric, uniformly bounded, has compact support and thus finite variance. The number of discontinuities is finite, and as $ \rho $ has compact support it immediately satisfies the summation bound from assumption~\ref{asmp:approximate_random_variables}.
+\end{proof}
+
+
 The motivation for introducing these approximate random variables was increased simulation speed. However, for the ultimate speed improvements, it is desirable to both switch to approximate random variables, and decrease the arithmetic precision used, giving a twofold speed improvement. Reducing the precision alone has been explored with applications to field programmable gate arrays  \citep{brugger2014mixed,omland2015exploiting,omland2016mixed,chow2012mixed}, and multilevel Monte Carlo schemes using varying fidelities of approximate random variables \citep{muller1958inverse}. However, performing both simultaneously is touched upon by \citet{giles2019random_multilevel}, although using a quite restrictive truncated uniform random bit Monte Carlo algorithm (extension to more general approximation schemes without varying the precision is done by \citet{giles2020approximate}). However, the work by \citet{giles2019random_multilevel} is primarily a cost most, and does not model the effect of rounding error. \todo{Thus our work is novel in this respect.}
 
 
 In order to describe the effect of rounding error resulting from the Euler-Maruyama scheme, the two most prominent works are by \citet{arciniega2003rounding} and \citet{omland2016mixed}, which are models for the average and worst case errors respectively. \citet{arciniega2003rounding} provide an \textit{ad hoc} statistical model and analysis for the rounding error arising from finite precision floating point calculations within the Euler-Maruyama scheme. Denoting the estimate produced when working in finite precision is denoted $ \overline{X} $, they propose that at the $ n $-th iteration, all of the composite floating point arithmetic in the Euler-Maruyama update culminates in an additive error $ \varepsilon_n $ where
 $ \overline{X}_{n+1} = \overline{X}_n + a(t_n, \overline{X}_n) \delta + b(t_n, \overline{X}_n)\sqrt{\delta} Z_n + \varepsilon_n $.
-This error is assumed to follow a Gaussian distribution, be zero mean, and have a variance $ \mathbb{V}(\varepsilon) \leq C \varrho^2 $, where $ C $ is some constant and $ \varrho $ is the unit roundoff. The main result from their analysis \citep[theorem~2.2]{arciniega2003rounding} is $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN\varrho^2 $. The model from \citet{omland2016mixed} uses a more rigorous finite precision framework. For brevity, letting $ \oplus $ and $ \otimes $ represent floating point addition and multiplication, then the model by \citet{omland2016mixed} in effect considers $ \overline{X}_{n+1} = \overline{X}_n \oplus ((a(t_n, \overline{X}_n) \otimes \delta) \oplus (b(t_n, \overline{X}_n)\otimes (\sqrt{\delta}\otimes Z_n))) $ and produces the worst case bound $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN^2\varrho^2 $.
+This error is assumed to follow a Gaussian distribution, be zero mean, and have a variance $ \mathbb{V}(\varepsilon) \leq C \varrho^2 $, where $ \varrho $ is the unit roundoff and $ C $ is some arbitrary constant ($ C $ will change from term to term and equation to equation). The main result from their analysis \citep[theorem~2.2]{arciniega2003rounding} is $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN\varrho^2 $. The model from \citet{omland2016mixed} uses a more rigorous finite precision framework. For brevity, letting $ \oplus $ and $ \otimes $ represent floating point addition and multiplication, then the model by \citet{omland2016mixed} in effect considers $ \overline{X}_{n+1} = \overline{X}_n \oplus ((a(t_n, \overline{X}_n) \otimes \delta) \oplus ((b(t_n, \overline{X}_n)\otimes \sqrt{\delta})\otimes Z_n)) $ and produces the worst case bound $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN^2\varrho^2 $.
 
 The model we will present in section~\ref{sec:a_leading_order_error_model} will take the model from \citet{omland2016mixed} as its starting point, but under assumptions appropriate for the Euler-Maruyama scheme, will ultimately reduce to a model closer resembling that by \citet{arciniega2003rounding}.
 
-\todo[inline=true, caption={numerical solutions}]{
-\begin{enumerate}
-\item Stochastic differential equations
-\begin{enumerate}
-\item The need for stochastic simulations.
-\begin{enumerate}
-\item Stochastic systems
-\item The Euler-Maruyama scheme
-\item Exact random variables are expensive, and thus approximate random variables are desirable. 
-\item Double precision is superfluous for most applications, and speeds would be better if single or half precision could be used. (simpler calculations and increased vector parallelisation).
-\item High accuracy means finer path simulations (e.g. CIR process has a high bias), but with low precisions this means rounding error can be substantial. Where is the balance?
-\end{enumerate}
-\item Approximate random variables make things go faster. 
-\begin{enumerate}
-\item Previous work by Mike and me on this and understanding the error. 
-\end{enumerate}
-\item Lower precisions make things go faster. 
-\begin{enumerate}
-\item Previous work by arcinega and allen and omland et al. 
-\end{enumerate}
-\item The Euler-Maruyama scheme has a build up of rounding error.
-\item Models for the rounding error incurred. 
-\begin{enumerate}
-\item The arcinegia and allen model. 
-\item The Omland model.  
-\end{enumerate}
-\end{enumerate}
-\end{enumerate}
-}
-
-\section{A leading order error model}
+\subsection{A leading order error model}
 \label{sec:a_leading_order_error_model}
+
+Starting with the more fundamentally rooted model from \citet{omland2016mixed}, we expect to recover, under appropriate assumptions, the more statistical model from \citet{arciniega2003rounding}. To this end we look to expand the model from \citet{omland2016mixed} and see the effects of arithmetic roundoff within the Euler-Maruyama update. Before presenting the analysis, we will briefly introduce a small amount of floating point notation. Numbers used in calculations must be stored in finite precision, where we denote the set of representable numbers as $ \overline{\mathbb{R}} \subset \mathbb{R}$, where we introduce the rounding operator $ R \colon \mathbb{R} \to \overline{\mathbb{R}}$ which implements the desired rounding mode, which we assume is round to nearest even.
+
+We begin by expressing the finite precision Euler-Maruyama update as  
+$ \overline{X}_{n+1} = \overline{X}_n \oplus (A_n \oplus B_n ) $, where $ A_n \coloneqq 
+a(t_n, \overline{X}_n) \otimes \delta $ and $ B_n \coloneqq  (b(t_n, \overline{X}_n) \otimes \sqrt{\delta}) \otimes \overline{Z}_n $. For an appropriately non dimensionalised stochastic process, such that $ T = 1 $, $ X_0 = O(1) $, $ a = O(1) $, $ b = O(1) $, then we anticipate $ X_n = O(1) $, $ Z_n = O(1) $, $ A_n = O(\delta) $, and $ B_n = O(\sqrt{\delta}) $. Similarly, for the precision levels and discretisations we have $ \varrho \ll 1 $ and $ \delta \ll \sqrt{\delta} \ll 1 $. This then gives us the size ordering $ \mathbb{E}(\lvert A_n \rvert) \ll \mathbb{E}(\lvert B_n \rvert) \ll \mathbb{E}(\lvert X_n \rvert)$.
+
+The first addition will produce an absolute error $ \eta'_n $ from $ A_n \oplus B_n = A_n + B_n + \eta'_n  $, where $ \eta'_n $ will be of  a size comparable with the unit roundoff for the larger of $ A_n $ and $ B_n $, which is $ B_n $. As $ b $ is assumed to have linear growth we obtain $ \lvert \eta'_n\rvert  \sim \lvert B_n \varrho\rvert  = O(\sqrt{\delta} \varrho (1 + \lvert\overline{X}_n\rvert))$, and after performing this first floating point addition we will be left with
+$ \overline{X}_{n+1} = \overline{X}_n \oplus (B_n + A_n + \eta'_n ) $,
+where we have written $ B_n + A_n + \eta'_n $ in order of decreasing magnitudes. 
+
+For the remaining addition operation, as we $ X_n = O(1) $ and $ \lvert X_n \rvert  \gg \lvert B_n \rvert  $, the nett result from the remaining floating point addition then is that this will produce a second absolute arithmetic error $ \eta_n $ where $ \lvert \eta_n \rvert  \sim \lvert X_n \rvert = O(\varrho (1 + \lvert \overline{X}_n\rvert ))$, and the Euler-Maruyama update will become
+$ \overline{X}_{n+1} \approx \overline{X}_n + B_n + A_n + \eta_n + \eta'_n $, 
+where again we have written the contributions in order of decreasing magnitudes. We identify two dominant sources of error. The first is $ \eta'_n $, arising from the addition of the drift term to the volatility term. The second is $ \eta_n $, arising from the addition of this sum to the underlying process.  We expect $ \lvert \eta'_n\rvert  = O(\varrho\sqrt{\delta} (1 + \lvert \overline{X}_n\rvert ))$ and $ \lvert \eta_n\rvert = O(\varrho (1 + \lvert \overline{X}_n\rvert ))$, and thus $ \lvert \eta_n\rvert  \gg \lvert \eta'_n\rvert  $.  If we then allow for the inclusion of other higher order contributions, we can then see that we expect to obtain
+$ \overline{X}_{n+1} = \overline{X}_n + B_n + A_n + \eta_n + \eta'_n + \eta''_n $.
+
+The \citet{arciniega2003rounding} model assumes that only $ \eta_n $ is significant, and makes the modelling assertion that this a zero mean Gaussian random variable with a variance only proportional $ \varrho^2 $. In our model, we will more rigorously justify the zero mean nature, drop the requirement that this follows a Gaussian distribution, and show that the smaller second order contributions from $ \eta' $ are not necessarily negligible, but contribute to the nett rounding error as much as the leading order $ \eta $ process. We propose model~\ref{model:rounding_errors} as an appropriate model for the rounding errors arising in the Euler-Maruyama scheme.  
+
+
+
+
+\begin{model}
+\label{model:rounding_errors}
+Let the Euler-Maruyama scheme use random variables $ \widetilde{Z} $ which satisfy assumption~\ref{asmp:approximate_random_variables}. The composite effects of rounding error introduce two dominant sources of error, $ \eta $ and $ \eta' $, where at each step we have 
+\begin{equation*}
+\overline{X}_{n+1} = \overline{X}_n + a(t_n, \overline{X}_n) \delta +  b(t_n, \overline{X}_n) \sqrt{\delta} \widetilde{Z}_n + \eta_n + \eta'_n,.
+\end{equation*}
+The larger of these is $ \eta_n = O(\varrho (1 + \lvert\overline{X}_n\rvert)) $, which is a martingale increment, and the smaller of these  is $ \eta'_n = O(\varrho\sqrt{\delta} (1 + \lvert \overline{X}_n\rvert)) $, which is a possibly non martingale increment.
+\end{model}
+
+
+
+
+Inspecting model~\ref{model:rounding_errors}, the key modelling assumption requiring justification is the martingale nature of $ \eta_n $. We already justified in the discussion earlier this section that $ \eta'_n = O(\varrho\sqrt{\delta} (1 + \lvert \overline{X}_n\rvert)) $, and so claiming this is a non martingale increment is no further restriction. It is straightforward to reason that $ \mathbb{E}(\lvert \eta_n\rvert) = O(\varrho (1 + \mathbb{E}(\lvert\overline{X}_n\rvert))) $, which if we take $ \mathbb{E}(\lvert \overline{X}_n\rvert ) = O(1) $ simplifies to $ \mathbb{E}(\lvert \eta_n\rvert ) = O(\varrho) $. Thus, to justify $ \eta_n $ being a martingale increment it is sufficient to reason that $ \lvert \mathbb{E}(\eta_n)\rvert \ll \mathbb{E}(\lvert \eta_n\rvert )$, which we achieve through lemma~\ref{lemma:leading_order_error}.
+
+\begin{lemma}
+\label{lemma:leading_order_error}
+Assuming $ \mathbb{E}(\lvert \overline{X}_n\rvert ) = O(1) $ and the random variables $ \widetilde{Z} $ satisfy assumption~\ref{asmp:approximate_random_variables}, then under the round to nearest even rounding mode, the leading order rounding error $ \eta_n $ has $ \mathbb{E}(\eta_n) = O(\varrho^2) $.
+\end{lemma}
+
+\begin{proof}
+The operation producing $ \eta_n $ is floating point addition between $ \overline{X}_n $ and $ (A_n \oplus B_n) $.  Dropping the subscript for brevity, we denote this by $ \alpha \oplus \overline{\beta} $, where $ \alpha \coloneqq  \overline{X}_n = \order{1} $ and   $ \beta \coloneqq A_n + B_n = O(\sqrt{\delta}) $. The absolute rounding error $ \eta $ is then given by 
+\begin{equation*}
+\label{eqt:absolute_rounding_errors_decomposition_for_floating_point_addition}
+\eta \coloneqq (\alpha \oplus R(\beta)) - (\alpha + R(\beta)) \equiv (R(\alpha + \beta) - (\alpha + \beta)) - (R(\beta) - \beta) +  (R(\alpha + R(\beta)) - R(\alpha + \beta)), 
+\end{equation*}
+where we will bound the three parenthesised differences in turn. 
+
+Inspecting the first term in, we can see this is the absolute error resulting from rounding the quantity $ \alpha + \beta $. Without much loss of generality, as we have assumed $ \alpha = \order{1} $, let us suppose $ \alpha \in (1, 2) $. Using IEEE floating point representation, the set of representable numbers $ (1, 2) \cap \overline{\mathbb{R}} $ will all be equally spaced. Defining the quantity $ z \coloneqq \alpha + \beta $, this will fall inside some interval $I_y \coloneqq [y-\varsigma, y + \varsigma] $, where $ y\pm\varsigma $ are adjacent floating-point numbers. Without loss of generality, we assume $ y - \varsigma $ is odd and $ y + \varsigma $ is even, where we either have $ z < y $ and we round down, or $ z \geq y $ and we round up, as depicted in figure~\ref{fig:round_to_nearest_even_error}.
+
+\begin{figure}[htb]
+\centering
+\subfigure[Possible values for $ z $ in $ I_y $, denoting $ z $ with a hollow square ($ \square $).\label{fig:round_to_nearest_even_error}]{\includegraphics{round_to_nearest_even_error}}
+\subfigure[Possible values for $ \zeta $ in $ I'_y $, demonstrating when the round to nearest even tie break causes rounding error by shaded regions. We denote $ \zeta $ with a solid square ($ \blacksquare $), and $ z $ with a hollow square ($ \square $).\label{fig:round_to_nearest_even_tie_break_error}]{\includegraphics{round_to_nearest_even_tie_break_error}}
+\caption{Rounding to the nearest even. We denote even representable values using a solid circular marker (\raisebox{-0.25em}{\Huge$ \bullet $}), odd values with a hollow circular marker (\raisebox{0.05em}{$ \bigcirc $}). Arrows show the values rounded to.}
+\label{fig:round_to_nearest_even}
+\end{figure}
+
+We can then evaluate the expectation $ \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}}) $ where we have 
+\begin{equation*}
+\mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}}) 
+= \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in [y-\varsigma, y)\}}) 
++ \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in [y, y+\varsigma]\}}).
+\end{equation*}
+These expectations can we written as integrals, giving
+\begin{equation*}
+\mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}}) 
+= \int_{y-\varsigma}^{y} ((y-\varsigma) - z) \mathbb{P}(\dd{z}) 
++ \int_{y}^{y+\varsigma} ((y+\varsigma) - z) \mathbb{P}(\dd{z}).
+\end{equation*}
+At time $ t_n $, the variable $ \overline{X}_n $ is $ \mathcal{F}_n $-measurable, but $ Z_n $ is $ \mathcal{F}_{n+1} $-measurable, and thus $ z $ and $ \beta $ will have the same distribution as $ \widetilde{Z} $. Denoting the probability density function of $ \beta $ as $ \rho $, which also satisfies assumption~\ref{asmp:approximate_random_variables}, we obtain
+\begin{equation*}
+\mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}}) 
+= \int_0^{\varsigma} (\varsigma - z) (\rho(y- \alpha + z) - \rho(y- \alpha -z)) \dd{z}.
+\end{equation*}
+As $ \varsigma \ll 1 $, if $ \rho $ is smooth everywhere in the interval $ I_y $, then we can approximate this using a Taylor series expansion, otherwise we use the bound from assumption~\ref{asmp:approximate_random_variables}, obtaining
+\begin{equation*}
+\lvert \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}}) \rvert 
+\leq  \begin{cases}
+C \varsigma^3 \lvert \rho'(y - \alpha)\rvert  + O(\varsigma^5 \lvert \rho'''(y-\alpha)\rvert )& \text{if } I_y \cap \mathcal{M} = \emptyset \\
+C \varsigma^2 K & \text{if } I_y \cap \mathcal{M} \neq \emptyset,
+\end{cases}
+\end{equation*}
+for some arbitrary constant $ C $.
+
+Using this expectation in the law of total expectation, then in the limits $ I_y \to  \dd{I_y} $ we obtain
+\begin{equation*}
+\mathbb{E}(R(z) - z)  
+=  \mathbb{E}(\mathbb{E}(R(z) - z\mid z\in I_y))  
+\approx \int_{\mathbb{P}(I_y) > 0} \dfrac{ \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}})}{\mathbb{P}(I_y)} \mathbb{P}(\dd{I_y}) 
+\approx \int  \dfrac{ \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}})}{\varsigma}  \dd{y},
+\end{equation*}
+where in the last approximation we used $ \mathbb{P}(I_y) \approx \rho(y - \alpha) \varsigma $ and $ \mathbb{P}(\dd{I_y}) \approx \rho(y - \alpha) \dd{y} $. In the limit $ \delta \ll 1 $ then we can approximate our integration domain as $ y \in  [0, \infty) $. In IEEE representation, $ \varsigma $ is a constant between powers of two, and thus $ \varsigma = \varrho 2^k $  for $ k \in \mathbb{Z} $, and hence we obtain to leading order 
+\begin{equation*}
+\lvert \mathbb{E}(R(z) - z) \rvert 
+\leq 
+\left\lvert \int_0^\infty C \varsigma^2 \rho'(y - \alpha) \indicatorfn_{\{I_y\cap \mathcal{M} = \emptyset\}} \dd{y} \right\rvert 
++ \int_0^\infty C \varsigma K \indicatorfn_{\{I_y\cap \mathcal{M} \neq \emptyset\}}\dd{y}.
+\end{equation*}
+The first integral is readily decomposed into sub intervals where $ \varsigma $ is a constant. For the second integral we let $ I^*_m $ denote the interval containing the discontinuity at positions $ m \in \mathcal{M} $. These discontinuities occur at the corresponding $ k $ values $ k_m $ such that $ I^*_m \subset [2^{k_m}, 2^{k_m + 1}] $, then we obtain
+\begin{equation*}
+\lvert \mathbb{E}(R(z) - z) \rvert  
+\leq C \left\lvert \sum_{k=-\infty}^{\infty} \varrho^2  2^{2k}\int_{2^k}^{2^{k+1}} \rho'(y - \alpha) \indicatorfn_{\{I_y\cap \mathcal{M} = \emptyset\}} \dd{y} \right\rvert 
++ C K \sum_{m \in \mathcal{M}} \varsigma \int_{I^*_m}  \dd{y}. 
+\end{equation*}
+The first integral can largely be evaluated exactly. The integration domain will contain at most $ M $ intervals containing singularities, and thus $ M+1 $ subintervals of the form $ \int_{a}^{b} \rho'(y-\alpha) \dd{y} $ where $ \rho' $ is continuous in the domain $ [a,b] $, and thus $ \int_{a}^{b} \rho'(y-\alpha) \dd{y} = [\rho(y-\alpha)\rvert_{a}^{b} $. We then use the bound $  \lvert \int_{a}^{b} \rho'(y-\alpha) \dd{y}\rvert \leq \lvert \rho(a-\alpha) \rvert  + \lvert \rho(b-\alpha) \rvert \leq 2 \max_{y'\in[a,b]} \rho(y' - \alpha) $. For the second integral we use $ \int_{I^*_m}  \dd{y} = \varsigma $ to give
+\begin{equation*}
+\lvert \mathbb{E}(R(z) - z) \rvert  \leq C \varrho^2 \sum_{k=-\infty}^{\infty}   2^{2k+1} (M+1) \max_{y'\in[2^{k}, 2^{k+1}]} \rho(y' - \alpha) 
++ C K \varrho^2 \sum_{m \in \mathcal{M}} 2^{2k_m} = O(\varrho^2), 
+\end{equation*}
+where in the last equality we used assumption~\ref{asmp:approximate_random_variables}. This shows the desired $ O(\varrho^2) $ size holds for the first parenthesised error constituting $ \eta $. The same line of reasoning similarly holds the for $ R(\beta) - \beta $ term also constituting $ \eta $ (akin to taking $ \alpha \to 0 $), arriving at an identical limiting bound.
+
+It remains to bound the final $ R(\alpha + R(\beta)) - R(\alpha + \beta) $ term constituting $ \eta $. Unlike the previous two terms, we will see that this term only contributes a rounding error when the round to nearest even tie break rule is required, and in most scenarios $ \alpha + R(\beta)$ and $\alpha + \beta $ will round to the the same number. To tackle this final term we introduce the slightly larger interval $ I'_y \coloneqq [y-2\varsigma, y+2\varsigma] $, where $ y-2\varsigma $, $ y $, and $ y + 2\varsigma $ are all representable. Without loss of generality we assume $ y $ is even and $ y \pm 2\varsigma $ are odd. Given $ \beta = O(\sqrt{\delta}) $ and $ \alpha  = O(1) $, we know that $ \lvert \beta - R(\beta)\rvert \leq \varsigma' $ where $ \varsigma' \ll \varsigma $, and thus $ \beta  $ is rounded first on a much finer granularity than $ \alpha + \beta $. Keeping our definition $ z \coloneqq \alpha + \beta $ and introducing $ \zeta \coloneqq \alpha + R(\beta) $, then the discrete set of values $ \zeta $ can take has a much finer granularity than the three representable numbers in $ I'_y $, namely $ \zeta \in \{y \pm n \varsigma'\} \cap I'_y$ for integers $ n \in \mathbb{N} $. We display the set of values $ \zeta $ can take in $ I'_y $ in figure~\ref{fig:round_to_nearest_even_tie_break_error}, where we demonstrate several possible rounding scenarios. 
+
+Inspecting figure~\ref{fig:round_to_nearest_even_tie_break_error}, we can see that in most situations $ \zeta  $ and $ z $ round to the same number. These only round to different numbers when $ \zeta $ lies on a tie break value and $ z $ takes a different value and would be rounded to an odd number, as indicated by the shaded regions in figure~\ref{fig:round_to_nearest_even_tie_break_error}. Thus, for the final term we have the expectation
+\begin{equation*}
+E((R(\zeta) - R(z))\indicatorfn_{\{z \in I'_y\}}) = 
+E((R(\zeta) - R(z))\indicatorfn_{ \{z \in [y - \varsigma - \varsigma', y - \varsigma)\} } \indicatorfn_{\{\zeta = y - \varsigma\}})  +  E((R(\zeta) - R(z)) \indicatorfn_{ \{z \in (y + \varsigma, y + \varsigma + \varsigma']\} } \indicatorfn_{\{\zeta = y + \varsigma\}}).
+\end{equation*}
+the first expectation will round $ \zeta \to y $ and $ z \to y - 2\varsigma $, giving a nett rounding error of $ 2\varsigma $, and the second expectation will round $ \zeta \to y $ and $ z \to y + 2\varsigma $ giving a rounding error of $ -2\varsigma $. Thus, expressing these expectations as integrals we obtain
+\begin{equation*}
+E((R(\zeta) - R(z))\indicatorfn_{\{z \in I'_y\}})  = \int_{y - \varsigma - \varsigma'}^{y - \varsigma} 2\varsigma \mathbb{P}(\dd{z}) + \int_{y + \varsigma}^{y + \varsigma + \varsigma'} -2\varsigma \mathbb{P}(\dd{z}) = 2\varsigma \int_0^{\varsigma'} (\rho(z + y - \varsigma - \varsigma' - \overline{a}) - \rho(z + y + \varsigma - \overline{a})) \dd{z}.
+\end{equation*}
+For this final integral expression we can again either perform a Taylor series expansion or use our bounds from assumption~\ref{asmp:approximate_random_variables} to obtain to leading order
+\begin{equation*}
+\lvert E((R(\zeta) - R(z))\indicatorfn_{\{z \in I'_y\}}) \rvert \leq 
+\begin{cases}
+C \varsigma (\varsigma \varsigma' + (\varsigma')^2 ) \lvert \rho'(y-\alpha) \rvert  & \text{if } I_y \cap \mathcal{M} = \emptyset \\
+C\varsigma\varsigma' K & \text{if } I_y \cap \mathcal{M} \neq \emptyset.
+\end{cases}
+\end{equation*}
+Using the bound $ \varsigma' \ll \varsigma $ we see that this bound is equivalent to that found earlier for the other two terms constituting $ \eta $. Again, by using the law of total expectation and the same steps as before we obtain the same $ O(\varrho^2) $ bound. Combining the three bounds completes the proof. \qedhere
+\end{proof}
+
+While model~\ref{model:rounding_errors} is justified by lemma~\ref{lemma:leading_order_error}, we can appreciate that the proof of lemma~\ref{lemma:leading_order_error} makes use of numerous \textit{ad hoc} approximations and limiting cases. However, as our ultimate aim is only to justify our model, rather than derive it, such conveniences are permissible. This serves to illustrate from first principles why the leading order error term $ \eta $ is effectively zero mean. Overall then, lemma~\ref{lemma:leading_order_error} provides a much more rigorous justification of the zero mean nature of the leading order error than was simply asserted in the  \citet{arciniega2003rounding} model. 
+
+To illustrate how the bound for the final nett rounding error is produced from our model for the incremental rounding error, we recall a convenient lemma from \citeauthor{giles2020approximate} \citep[lemma~4.3]{giles2020approximate} \citep[lemma~5.2.3]{sheridan2020nested}, which we present without proof as lemma~\ref{lemma:strong_error_bound}.
+
+\begin{lemma}
+\label{lemma:strong_error_bound}
+Suppose for a process $ \mathcal{E}_n $ we have 
+$ \mathcal{E}_{n+1} = \mathcal{E}_n + \delta \mathcal{A}_n + \sqrt{\delta} Z_n \mathcal{B}_n + \Xi_n + \Theta_n $,
+using a discretisation interval $ \delta $. 
+We assert $ \mathcal{E}_0 = 0 $ almost surely, $ Z_n $ are i.i.d.\ zero mean random variables with all finite moments bounded, and $ \mathcal{A}_n $ and $ \mathcal{B}_n $ are $ \mathcal{F}_{\tau_n} $-adapted with $ \lvert \mathcal{A}_n\rvert \leq L_A \lvert \mathcal{E}_n\rvert  $ and $ \lvert \mathcal{B}_n\rvert \leq L_B \lvert \mathcal{E}_n\rvert  $ for some strictly positive and finite constants $ L_A $ and $ L_B $. The process $ \Xi $ is a martingale where $ \mathbb{E}(\Xi_n\mid\mathcal{F}_{t_n}) = 0 $, and for integers $ p \geq 2 $  and a constant $ s \in \mathbb{R} $ there are finite and strictly positive constants $ c_1 $ and $ c_2 $ such that $ \mathbb{E}(\lvert\Xi_n\rvert^p) \leq c_1 \delta^{p(s + 1/2)} $, and similarly $ \mathbb{E}(\lvert\Theta_n\rvert^p) \leq c_2 \delta^{p(s + 1)} $ for $ \Theta $. Then there exists constants $ c_3 $ and $ c_4 $ which depends only on $ L_A $, $ L_B $, $ p $, and $ (T-t_0) $ such that 
+$ \mathbb{E}(\sup_{n \leq N} \lvert\mathcal{E}_n\rvert^p) \leq c_3(c_4 c_1 + (T - t_0)^{p/2}c_2)\delta^{ps} $, 
+where $ c_4 = 18p^{3/2}(p - 1)^{-3/2} $.
+\end{lemma}
+
+\begin{proof}
+The proof is given by \citeauthor{giles2020approximate} \citep[lemma~4.3]{giles2020approximate} \citep[lemma~5.2.3]{sheridan2020nested}, and proceeds by a combination of Jensen's inequality, the discrete Burkholder-Davis-Gundy inequality, and the discrete Gr\"{o}nwall inequalities. \qedhere
+\end{proof}
+
+By considering the difference between the process $ \overline{X}_n $ calculated in high and low precision, then the result from \citep[theorem~2.2]{arciniega2003rounding} $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN\varrho^2 $ immediately follows from lemma~\ref{lemma:strong_error_bound}. Furthermore, we obtain an identical bound from lemma~\ref{lemma:strong_error_bound} for the nett error that arises from model~\ref{model:rounding_errors}. 
+
+\begin{lemma}
+\label{lemma:rounding_error_two_way}
+Using model~\ref{model:rounding_errors} for the rounding errors, then 
+$ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN\varrho^2 $.
+\end{lemma}
+
+\begin{proof}
+Defining $\mathcal{E}_n \coloneqq \widehat{X}_n - \widetilde{X}_n $ and differencing the appropriate Euler-Maruyama schemes for $ \widehat{X}_n $ and $ \widetilde{X}_n $ we obtain 
+\begin{equation*}
+\mathcal{E}_{n+1} = \mathcal{E}_n + \delta \underbrace{(a(t_n, \widehat{X}_n) - a(t_n, \widetilde{X}_n))}_{\mathcal{A}_n} {} + \sqrt{\delta} \widetilde{Z}_n \underbrace{(b(t_n, \widehat{X}_n) - b(t_n, \widetilde{X}_n))}_{\mathcal{B}_n} {}  + \underbrace{\sqrt{\delta} b(t_n, \widehat{X}_n) (\widehat{Z}_n - \widetilde{Z}_n) - \eta_n}_{\Xi_n} {} - \underbrace{\eta'_n}_{\Theta_n},
+\end{equation*}
+where we have indicated the equivalent terms in lemma~\ref{lemma:strong_error_bound}. The bounds on $ \mathcal{A}_n $ and $ \mathcal{B}_n $ follow from the standard assumptions of $ a $ and $ b $ being spatially Lipschitz continuous. Furthermore, for the $ \Xi_n $ term this is zero mean and has $ \mathbb{E}(\lvert \Xi_n\rvert^p) \leq O(\delta^{p/2}) + O(\varrho^p) \leq O(\varrho^2) $, corresponding to $ s = -\tfrac{1}{2} $ in lemma~\ref{lemma:strong_error_bound} and $ c_1 \propto \varrho^p $. Similarly, from model~\ref{model:rounding_errors} we have $ \mathbb{E}(\lvert \Theta_n\rvert^p) \leq C \varrho^p\delta^{p/2}$, also corresponding to $ s = -\tfrac{1}{2} $ and $ c_2 \propto \varrho^2 $. Thus from lemma~\ref{lemma:strong_error_bound} we obtain $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^p) \leq O(\varrho^p \delta^{-p/2}) $, which when we set $ p = 2 $ and note that $ \delta \propto \tfrac{1}{N} $ obtains the desired bound. \qedhere
+\end{proof}
+
+The significant insight provided by lemma~\ref{lemma:rounding_error_two_way}, is that we saw in its proof that when we applied lemma~\ref{lemma:strong_error_bound}, the nett contributions from the $ \eta $ and $ \eta' $ processes were equal in size. Although the $ \eta' $ process may be smaller than $ \eta $ by a factor of $ \sqrt{\delta} $ in model~\ref{model:rounding_errors}, because it is not zero mean, its contributions do not cancel, and thus build up at a faster rate. Furthermore, these demonstrate that the updating process is permitted a systematic rounding error process, provided this is $ O(\sqrt{\delta}) $.
+
+\subsection{Kahan compensated summation}
+\label{sec:kahan_compensated_summation}
+
+The Euler-Maruyama scheme consists of performing a cumulative summation of a sequence of update terms. The problem of summing a sequence of floating point numbers and minimising the cumulative rounding error is well known, and there have been a variety of methods developed to overcome this, such as \emph{pair wise summation} or \emph{compensated summation} \citep[4.1]{higham2002accuracy}. As the Euler-Maruyama scheme is a sequential and incremental procedure, a compensated summation is an appropriate technique. As our schemes are motivated by computational speed, then \emph{Kahan compensated summation} \citep{kahan1965further}, being the least numerically intensive, is the most suitable candidate for incorporating into the Euler-Maruyama scheme. The Kahan compensated summation adds a given increment, and then subtracts away the computed summation prior to that increment. The difference of this inferred increment from the original provides an estimate for the incurred rounding error, which is then adjusted for when adding subsequent terms in the sequence. The Kahan compensated summation procedure is outlined in algorithm~\ref{algo:kahan_compensated_summation}, and a C implementation incorporating this into the Euler-Maruyama scheme in single precision is shown in code~\ref{code:c:euler_maruyama_scheme_with_kahan_compensated_summation}. Interestingly, the related use of Kahan compensated summation in the numerical solution of ordinary differential equations was first proposed by \citet{vitasek1969numerical}, and is demonstrated by \citet[pages~86--87]{higham1993accuracy}.
+
+\begin{algorithm}[htb]
+\DontPrintSemicolon
+\KwIn{A sequence $ \{x_1, x_2, \ldots, x_N \} $ of $ N $ floating point numbers.}
+\KwOut{A high accuracy estimate of the summation $ \sum_{i=1}^{N} x_i $.}
+Initialise both an accumulator $ a $ and compensation $ c $ to zero.\;
+\For{$ x_i \in \{x_1, x_2, \ldots, x_n \} $}{
+    Calculate a compensated increment $ y \leftarrow x_i - c $.\;
+    Add the compensated increment $ a_{\mathrm{new}} \leftarrow a + y $ and keep the original $ a_{\mathrm{original}} \leftarrow a $.\;
+    Update the compensation $ c \leftarrow (a_{\mathrm{new}} -  a_{\mathrm{original}}) - y $.\;
+    Update the accumulator $ a \leftarrow a_{\mathrm{new}} $.\;
+}
+Use $ a $ to estimate $ \sum_{i=1}^{N} x_i $.\;
+\caption[Kahan compensated summation ]{Kahan compensated summation.}
+\label{algo:kahan_compensated_summation}
+\end{algorithm}
+
+\begin{lstfloat}[htb]
+\begin{lstlisting}[style=C, caption={C implementation of the Euler-Maruyama scheme using Kahan compensated summation from  algorithm~\ref{algo:kahan_compensated_summation}.}, label={code:c:euler_maruyama_scheme_with_kahan_compensated_summation}]
+float compensated_euler_maruyama_scheme(float X, float dX, float * compensation)
+{
+    float compensated_increment = dX - (*compensation); 
+    float accumulated_sum = X + compensated_increment;
+    (*compensation) = (accumulated_sum - X) - compensated_increment;
+    return accumulated_sum;
+}
+\end{lstlisting}
+\end{lstfloat}
+
+An error analysis of Kahan compensated summation is provided by \citet[page~791, (3.11)]{higham1993accuracy}, \citet[Excercise~19, pages 229 and 571--573]{knuth2014art}, and \citet{goldberg1991every}. The Kahan compensated summation shown in  algorithm~\ref{algo:kahan_compensated_summation} has an overall absolute and relative errors of 
+\begin{equation*}
+(2\varrho + O(N\varrho^2))\sum_{i=1}^{N} \abs{x_i}
+\qquad \text{and} \qquad
+(2\varrho + O(N\varrho^2))\dfrac{\sum_{i=1}^{N} \lvert x_i\rvert}{\left\lvert \sum_{i=1}^{N} x_i\right\rvert}. 
+\end{equation*}
+respectively. The ratio of
+$ \sum_{i=1}^{N} \abs{x_i} $ to $\lvert \sum_{i=1}^{N} x_i\rvert $
+is known as the condition number, representing the sensitivity of the summation to rounding error. For a series of zero mean random variables, the condition number can be expected to be $ O(\sqrt{n}) $, but for several stochastic process (e.g. geometric Brownian motion) the drift term causes the increments to have a non zero mean, and hence the condition number approximately limits to a constant. 
+
+Based on the usual error analysis of Kahan compensated summation, one might expect the leading order our error from the a Kahan compensated Euler-Maruyama scheme should mostly have an $ \order{1} $ error dependence on $ N $, until the eventually the $ O(N) $ term takes effect for sufficiently large $ N $. However, inspecting model~\ref{model:rounding_errors} and code~\ref{code:c:euler_maruyama_scheme_with_kahan_compensated_summation} we see that the Kahan compensated summation is designed to tackle the leading order $ \eta $ term. However, in computing the Euler-Maruyama update, the smaller $ \eta' $ error is not compensated for, and thus will persist. Thus, even with Kahan compensated summation, we see from lemma~\ref{lemma:rounding_error_two_way} that we still expect a nett leading order rounding error $ O(\sqrt{N}\varrho) $. Overall then, we see that as we increase $ N $, we first expect for small $ N $ an $ O(\varrho) $ error, for very large $ N $ an $ O(N\varrho^2) $ error, and possibly an intermediate $ O(\sqrt{N}\varrho) $ error. 
+
+\missingfigure{Euler-Maruyama two way errors with and without Kahan compensated summation.}
 
 \section{Multilevel Monte Carlo}
 \label{sec:multilevel_monte_carlo}
+
+In section~\ref{sec:numerical_solutions_to_stochastic_differential_equations} we introduced the usual Euler-Maruyama scheme, and a modified version which utilises approximate random variables. The reason for introducing approximate random variables was to benefit from their improved speed, and this will only be magnified if we simultaneous also reduce the floating point precision used in the modified Euler-Maruyama scheme. After reviewing the models developed by \citet{arciniega2003rounding} and \citet{omland2016mixed} for describing the rounding error incurred during the Euler-Maruyama scheme, we have presented our own model for the rounding error in section~\ref{sec:a_leading_order_error_model}, which presents a similar model the description by \citet{arciniega2003rounding}, although one which accounts for using approximate random variables, and also which is shored up with a more rigorous mathematical justification. Ultimately though, we now have two possible types of simulation: an expensive but precise simulation using exact Gaussian random variables in a high floating point precision, and a cruder and cheaper simulation using approximate Gaussian random variables in low precision. The accuracy of the former can be combined with the speed of the latter by a multilevel Monte Carlo formulation \citep{giles2008multilevel,giles2015multilevel_review}. 
+
+As a brief review of the usual multilevel Monte Carlo formulation, and how our work fits within this, let us suppose we wish to compute the expectation of some functional $ P $ which acts on the terminal solution $ X_T $ of the underlying stochastic process. The simulations can be performed using various levels of temporal discretisation, where we index the levels by $ l $ where we suppose there are $ L+1 $ levels such that $ l\in \{0, 1, 2, \ldots, L\} $, where $ l = 0 $ corresponds to the coarsest possible discretisation, and $ l=L $ the finest. The approximation coming from the usual Euler-Maruyama scheme for a particular level $ l $ we denote by $ \widehat{P}_l $, and that arising from the modified Euler-Maruyama scheme using low precision approximate random variables by $ \widetilde{P}_l $. For notational simplicity we use the convention $ \widehat{P}_{-1} \coloneqq \widetilde{P}_{-1} \coloneqq 0 $. \citet{giles2020approximate,giles2020approximating} suggest incorporating the approximate random variables using the nested multilevel Monte Carlo framework
+\begin{equation*}
+E(P) 
+\approx
+E(\widehat{P}_L) 
+= 
+\sum_{l = 0}^{L} E(\widehat{P}_l - \widehat{P}_{l-1}) 
+= 
+\sum_{l = 0}^{L} E(\widetilde{P}_l - \widetilde{P}_{l-1}) +  E(\widehat{P}_l - \widehat{P}_{l-1} - \widetilde{P}_l + \widetilde{P}_{l-1}),
+\end{equation*}
+where the first approximation is the regular Monte Carlo procedure \citep{glasserman2013monte}, the first equality is the usual multilevel Monte Carlo decomposition \citep{giles2008multilevel}, and the final equality is the nested multilevel Monte Carlo framework \citep{giles2020approximate,giles2020approximating}.
+
+
+\todo[inline=true, caption={multilevel Monte Carlo}]{
+\begin{enumerate}
+\item Multilevel Monte Carlo 
+\begin{enumerate}
+\item Multilevel method and recovery of accuracy. 
+\item The error bound from our convenient lemma. 
+\item The simple 2 way error is the same as from arciniega and allen (using our concenient lemma). 
+\item The 4 way convenient lemma. 
+\item Kahan summation
+\item The variance reductions from simulations
+\item The applicability of half precision and Kahan summation version. 
+\item Can I get some C timings for path simulations using (savings from wider vectorisation and also lower precision calculations), using piecewise linear approximation with unions, or the LUT:
+\begin{enumerate}
+\item Double precision 
+\item Single precision 
+\item Half precision
+\item Half precision with Kahan summation. 
+\item Possibly both for the Euler and Milstein and GBM processes. 
+\end{enumerate}
+\item Calculate expected time savings. 
+\end{enumerate}
+\end{enumerate}
+}
 
 \section{Conclusions}
 \label{sec:conclusions}
