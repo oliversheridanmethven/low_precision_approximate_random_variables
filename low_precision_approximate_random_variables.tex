@@ -228,8 +228,10 @@ One of the approximations we will utilise later is the piecewise linear approxim
 
 \begin{figure}[htb]
 \centering
-\subfigure[A piecewise linear approximation using 8 intervals.\label{fig:piecewise_linear_gaussian_approximation}]{\includegraphics{piecewise_linear_gaussian_approximation}}
-\subfigure[The resultant probability density function with regions of zero measure indicated.\label{fig:piecewise_linear_gaussian_approximation_pdf}]{\includegraphics{piecewise_linear_gaussian_approximation_pdf}}
+\hfil
+\subfigure[A piecewise linear approximation using 8 intervals.\label{fig:piecewise_linear_gaussian_approximation}]{\includegraphics{piecewise_linear_gaussian_approximation}}\hfil
+\subfigure[The resultant probability density function with regions of zero measure indicated.\label{fig:piecewise_linear_gaussian_approximation_pdf}]{\includegraphics{piecewise_linear_gaussian_approximation_pdf}}\hfil
+
 \caption{A piecewise linear approximation of the Gaussian distributions inverse cumulative distribution function, and the resultant probability density function.}
 \label{fig:piecewise_linear_approximation}
 \end{figure}
@@ -259,7 +261,7 @@ The summation can be bounded from above and below by similar integrals, and thus
 \end{proof}
 
 \begin{lemma}
-\label{lemma:approximate_gaussian_distribution}
+\label{lemma:approximate_gaussian_distribution_linear}
 The approximate Gaussian distribution resulting from the piecewise linear approximation by \citet{giles2020approximating} satisfies assumption~\ref{asmp:approximate_random_variables}.
 \end{lemma}
 
@@ -267,6 +269,14 @@ The approximate Gaussian distribution resulting from the piecewise linear approx
 For a finite number of approximation intervals, we can see from figure~\ref{fig:piecewise_linear_gaussian_approximation_pdf} that the probability density function is symmetric, uniformly bounded, has compact support and thus finite variance. The number of discontinuities is finite, and as $ \rho $ has compact support it immediately satisfies the summation bound from assumption~\ref{asmp:approximate_random_variables}.
 \end{proof}
 
+\begin{lemma}
+\label{lemma:approximate_gaussian_distribution_cubic}
+The approximate Gaussian distribution resulting from the piecewise cubic approximation by \citet{giles2020approximating} satisfies assumption~\ref{asmp:approximate_random_variables}.
+\end{lemma}
+
+\begin{proof}
+The proof follows identically to the proof of lemma~\ref{lemma:approximate_gaussian_distribution_linear}.
+\end{proof}
 
 The motivation for introducing these approximate random variables was increased simulation speed. However, for the ultimate speed improvements, it is desirable to both switch to approximate random variables, and decrease the arithmetic precision used, giving a twofold speed improvement. Reducing the precision alone has been explored with applications to field programmable gate arrays  \citep{brugger2014mixed,omland2015exploiting,omland2016mixed,chow2012mixed}, and multilevel Monte Carlo schemes using varying fidelities of approximate random variables \citep{muller1958inverse}. However, performing both simultaneously is touched upon by \citet{giles2019random_multilevel}, although using a quite restrictive truncated uniform random bit Monte Carlo algorithm (extension to more general approximation schemes without varying the precision is done by \citet{giles2020approximate}). However, the work by \citet{giles2019random_multilevel} is primarily a cost most, and does not model the effect of rounding error. \todo{Thus our work is novel in this respect.}
 
@@ -331,9 +341,9 @@ Inspecting the first term in, we can see this is the absolute error resulting fr
 
 \begin{figure}[htb]
 \centering
-\subfigure[Possible values for $ z $ in $ I_y $, denoting $ z $ with a hollow square ($ \square $).\label{fig:round_to_nearest_even_error}]{\includegraphics{round_to_nearest_even_error}}
-\subfigure[Possible values for $ \zeta $ in $ I'_y $, demonstrating when the round to nearest even tie break causes rounding error by shaded regions. We denote $ \zeta $ with a solid square ($ \blacksquare $), and $ z $ with a hollow square ($ \square $).\label{fig:round_to_nearest_even_tie_break_error}]{\includegraphics{round_to_nearest_even_tie_break_error}}
-\caption{Rounding to the nearest even. We denote even representable values using a solid circular marker (\raisebox{-0.25em}{\Huge$ \bullet $}), odd values with a hollow circular marker (\raisebox{0.05em}{$ \bigcirc $}). Arrows show the values rounded to.}
+\subfigure[Possible values for $ z $ in $ I_y $, denoting $ z $ with ``$ \square $''.\label{fig:round_to_nearest_even_error}]{\includegraphics{round_to_nearest_even_error}}
+\subfigure[Possible values for $ \zeta $ in $ I'_y $, demonstrating when the round to nearest even tie break causes rounding error by shaded regions. We denote $ \zeta $ with ``$ \blacksquare $'', and $ z $ with ``$ \square $''.\label{fig:round_to_nearest_even_tie_break_error}]{\includegraphics{round_to_nearest_even_tie_break_error}}
+\caption{Rounding to the nearest even. We denote even representable values using ``\raisebox{-0.25em}{\Huge$ \bullet $}'', odd values using ``\raisebox{0.05em}{$ \bigcirc $}''. Arrows show the values rounded to.}
 \label{fig:round_to_nearest_even}
 \end{figure}
 
@@ -440,14 +450,29 @@ $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^2) \leq  CN\varrho^2 $
 \end{lemma}
 
 \begin{proof}
-Defining $\mathcal{E}_n \coloneqq \widehat{X}_n - \widetilde{X}_n $ and differencing the appropriate Euler-Maruyama schemes for $ \widehat{X}_n $ and $ \widetilde{X}_n $ we obtain 
+Defining $\mathcal{E}_n \coloneqq \widehat{X}_n - \overline{X}_n $ and differencing the appropriate Euler-Maruyama schemes for $ \widehat{X}_n $ and $ \overline{X}_n $ we obtain 
 \begin{equation*}
-\mathcal{E}_{n+1} = \mathcal{E}_n + \delta \underbrace{(a(t_n, \widehat{X}_n) - a(t_n, \widetilde{X}_n))}_{\mathcal{A}_n} {} + \sqrt{\delta} \widetilde{Z}_n \underbrace{(b(t_n, \widehat{X}_n) - b(t_n, \widetilde{X}_n))}_{\mathcal{B}_n} {}  + \underbrace{\sqrt{\delta} b(t_n, \widehat{X}_n) (\widehat{Z}_n - \widetilde{Z}_n) - \eta_n}_{\Xi_n} {} - \underbrace{\eta'_n}_{\Theta_n},
+\mathcal{E}_{n+1} = \mathcal{E}_n + \delta \underbrace{(a(t_n, \widehat{X}_n) - a(t_n, \overline{X}_n))}_{\mathcal{A}_n} {} + \sqrt{\delta} \widetilde{Z}_n \underbrace{(b(t_n, \widehat{X}_n) - b(t_n, \overline{X}_n))}_{\mathcal{B}_n} {}  + \underbrace{\sqrt{\delta} b(t_n, \widehat{X}_n) (\widehat{Z}_n - \widetilde{Z}_n) - \eta_n}_{\Xi_n} {} - \underbrace{\eta'_n}_{\Theta_n},
 \end{equation*}
 where we have indicated the equivalent terms in lemma~\ref{lemma:strong_error_bound}. The bounds on $ \mathcal{A}_n $ and $ \mathcal{B}_n $ follow from the standard assumptions of $ a $ and $ b $ being spatially Lipschitz continuous. Furthermore, for the $ \Xi_n $ term this is zero mean and has $ \mathbb{E}(\lvert \Xi_n\rvert^p) \leq O(\delta^{p/2}) + O(\varrho^p) \leq O(\varrho^2) $, corresponding to $ s = -\tfrac{1}{2} $ in lemma~\ref{lemma:strong_error_bound} and $ c_1 \propto \varrho^p $. Similarly, from model~\ref{model:rounding_errors} we have $ \mathbb{E}(\lvert \Theta_n\rvert^p) \leq C \varrho^p\delta^{p/2}$, also corresponding to $ s = -\tfrac{1}{2} $ and $ c_2 \propto \varrho^2 $. Thus from lemma~\ref{lemma:strong_error_bound} we obtain $ \mathbb{E}(\lvert \widehat{X}_N - \overline{X}_N \rvert^p) \leq O(\varrho^p \delta^{-p/2}) $, which when we set $ p = 2 $ and note that $ \delta \propto \tfrac{1}{N} $ obtains the desired bound. \qedhere
 \end{proof}
 
 The significant insight provided by lemma~\ref{lemma:rounding_error_two_way}, is that we saw in its proof that when we applied lemma~\ref{lemma:strong_error_bound}, the nett contributions from the $ \eta $ and $ \eta' $ processes were equal in size. Although the $ \eta' $ process may be smaller than $ \eta $ by a factor of $ \sqrt{\delta} $ in model~\ref{model:rounding_errors}, because it is not zero mean, its contributions do not cancel, and thus build up at a faster rate. Furthermore, these demonstrate that the updating process is permitted a systematic rounding error process, provided this is $ O(\sqrt{\delta}) $.
+
+The variance predicted by lemma~\ref{lemma:rounding_error_two_way} is shown in figure~\ref{fig:two_way_variance_approximation}. For the approximate random variables we have used the high fidelity piecewise cubic approximation from \citet{giles2020approximating}. This is to ensure that the $ \eta_n $ term within the $ \Xi_n $ process in the proof of lemma~\ref{lemma:rounding_error_two_way} is likely the dominant term for moderately low precisions. Using the mpmath Python library we adjust the number of bits used in mantissa for the low precision approximate random variables. We use 7, 10, and 23 bits, corresponding to the precisions for \texttt{bfloat16}, half, and single precisions respectively. We also consider a precision using 16 bits for the mantissa to represent an intermediate precision level. For the stochastic process we simulate a geometric Brownian motion where $ a(t, X_t) \equiv \mu X_t $ and $ b(t, X_t) \equiv \sigma X_t $ for strictly positive constant $ \mu $ and $ \sigma $. Following the setup from \citet{giles2008multilevel} we choose $ \mu = 0.05 $, $ \sigma = 0.2 $, and $ X_0 = 1 $.
+
+We can see from figure~\ref{fig:two_way_variance_approximation} that we approximately observe the growth in the variance for half precision anticipated by lemma~\ref{lemma:rounding_error_two_way}. However, the brain float precision seems to exhibit a variance closer to the worst case bound from \citet{omland2016mixed}. Interestingly, we see that the higher intermediate and single precision results appear to exhibit an approximate $ O(1) $ variance. The reason for this is because at such high precisions, the $ \eta $ term within $ \Xi_n $ is the smaller of the two terms, with the approximation error $ Z_n - \widetilde{Z}_n $ being the more dominant error. As shown by \citet{giles2020approximate} this produces a resultant error $ \mathbb{E}(\lvert Z - \widetilde{Z}\rvert^p) $ which is independent of the discretisation $ \delta $, and so appears $ O(1) $. Furthermore, the intermediate and single precision variances are approximately the same values, again indicating that this error is dominated by the approximate random variables' fidelity rather than their floating point precision. 
+
+\begin{figure}[htb]
+\centering
+\hfil
+\subfigure[Without Kahan compensated summation.\label{fig:two_way_variance_approximation}]{\includegraphics{two_way_variance_approximation}}\hfil 
+\subfigure[With Kahan compensation summation.\label{fig:two_way_variance_kahan}]{\includegraphics{two_way_variance_kahan}}\hfil
+
+\caption{The variance of the difference between the exact Euler-Maruyama estimate and the estimate using low precision approximate random variables from a piecewise cubic approximation with different precisions, corresponding to lemma~\ref{lemma:rounding_error_two_way}. The precisions use differing numbers of bits for the mantissa. ($ \blacklozenge $) 7 bits. ($ \blacksquare $) 10 bits. (\raisebox{-0.1em}{\huge$ \bullet$})
+16 bits. ({\large $ \blacktriangledown $}) 23 bits.}
+\label{fig:two_way_variances}
+\end{figure}
 
 \subsection{Kahan compensated summation}
 \label{sec:kahan_compensated_summation}
@@ -492,9 +517,9 @@ respectively. The ratio of
 $ \sum_{i=1}^{N} \abs{x_i} $ to $\lvert \sum_{i=1}^{N} x_i\rvert $
 is known as the condition number, representing the sensitivity of the summation to rounding error. For a series of zero mean random variables, the condition number can be expected to be $ O(\sqrt{n}) $, but for several stochastic process (e.g. geometric Brownian motion) the drift term causes the increments to have a non zero mean, and hence the condition number approximately limits to a constant. 
 
-Based on the usual error analysis of Kahan compensated summation, one might expect the leading order our error from the a Kahan compensated Euler-Maruyama scheme should mostly have an $ \order{1} $ error dependence on $ N $, until the eventually the $ O(N) $ term takes effect for sufficiently large $ N $. However, inspecting model~\ref{model:rounding_errors} and code~\ref{code:c:euler_maruyama_scheme_with_kahan_compensated_summation} we see that the Kahan compensated summation is designed to tackle the leading order $ \eta $ term. However, in computing the Euler-Maruyama update, the smaller $ \eta' $ error is not compensated for, and thus will persist. Thus, even with Kahan compensated summation, we see from lemma~\ref{lemma:rounding_error_two_way} that we still expect a nett leading order rounding error $ O(\sqrt{N}\varrho) $. Overall then, we see that as we increase $ N $, we first expect for small $ N $ an $ O(\varrho) $ error, for very large $ N $ an $ O(N\varrho^2) $ error, and possibly an intermediate $ O(\sqrt{N}\varrho) $ error. 
+Based on the usual error analysis of Kahan compensated summation, one might expect the leading order error from the a Kahan compensated Euler-Maruyama scheme should mostly have an $ \order{1} $ error dependence on $ N $, until the eventually the $ O(N) $ term takes effect for sufficiently large $ N $. However, inspecting model~\ref{model:rounding_errors} and code~\ref{code:c:euler_maruyama_scheme_with_kahan_compensated_summation} we see that the Kahan compensated summation is designed to tackle the leading order $ \eta $ term. However, in computing the Euler-Maruyama update, the smaller $ \eta' $ error is not compensated for, and thus will persist. Thus, even with Kahan compensated summation, we see from lemma~\ref{lemma:rounding_error_two_way} that we still expect a nett leading order rounding error $ O(\sqrt{N}\varrho) $. Overall then, we see that as we increase $ N $, we first expect for small $ N $ an $ O(\varrho) $ error, for very large $ N $ an $ O(N\varrho^2) $ error, and possibly an intermediate $ O(\sqrt{N}\varrho) $ error. 
 
-\missingfigure{Euler-Maruyama two way errors with and without Kahan compensated summation.}
+The variances from the approximations obtained by incorporating a Kahan compensated summation into the modified Euler-Maruyama scheme are shown in figure~\ref{fig:two_way_variance_kahan}. The first thing to notice from this is that all the variances appear to be $ O(1) $, in keeping with the leading order anticipated error. For the brain float and half precision variances, there is a separation between these approximately a factor of $ 2^{-6} $, which as we expect the leading order error to be $ O(\varrho) $, then we expect a reduction in the variance of approximately $ \tfrac{\varrho^2_{10}}{\varrho^2_{7}} \approx \approx 2^{-6} $, where we have used the subscript to denote the number of mantissa bits. Hence we can see the reduction in variance is approximately as anticipated. As for the intermediate and single precisions, we see these cluster on top of each other, again indicating that the dominant error is from approximating the Gaussian distribution rather than from finite precision arithmetic. 
 
 \section{Multilevel Monte Carlo}
 \label{sec:multilevel_monte_carlo}
@@ -509,9 +534,125 @@ E(\widehat{P}_L)
 = 
 \sum_{l = 0}^{L} E(\widehat{P}_l - \widehat{P}_{l-1}) 
 = 
-\sum_{l = 0}^{L} E(\widetilde{P}_l - \widetilde{P}_{l-1}) +  E(\widehat{P}_l - \widehat{P}_{l-1} - \widetilde{P}_l + \widetilde{P}_{l-1}),
+\sum_{l = 0}^{L} E(\widetilde{P}_l - \widetilde{P}_{l-1}) +  E(\widehat{P}_l - \widehat{P}_{l-1} - \widetilde{P}_l + \widetilde{P}_{l-1})
+= 
+\sum_{l = 0}^{L} E(\overline{P}_l - \overline{P}_{l-1}) +  E(\widehat{P}_l - \widehat{P}_{l-1} - \overline{P}_l + \overline{P}_{l-1}),
 \end{equation*}
-where the first approximation is the regular Monte Carlo procedure \citep{glasserman2013monte}, the first equality is the usual multilevel Monte Carlo decomposition \citep{giles2008multilevel}, and the final equality is the nested multilevel Monte Carlo framework \citep{giles2020approximate,giles2020approximating}.
+where the first approximation is the regular Monte Carlo procedure \citep{glasserman2013monte}, the first equality is the usual multilevel Monte Carlo decomposition \citep{giles2008multilevel},  the third equality is the nested multilevel Monte Carlo framework \citep{giles2020approximate,giles2020approximating}, and the final equality is the same nested multilevel framework utilising low precision approximate random variables.  
+
+Importantly, for a given level $ l $, the fine path's discretisation $ \delta^{\mathrm{f}} $ and the coarse path's $ \delta^{\mathrm{c}} $ are given by $ \delta^{\mathrm{f}} = 2^{-l} $ and $ \delta^{\mathrm{c}} = 2 \delta^{\mathrm{f}} $ respectively. The coarse path's Weiner increment is produced by the pairwise summation of the fine path's Wiener increments. Furthermore, the Weiner increments $ \Delta W $ are produced using Gaussian increments $ Z $ where $ \Delta W \coloneqq \sqrt{\delta} Z $, and the Gaussian increments are produced using the inverse transform method where $ Z_n = \Phi^{-1}(U_n) $. Crucially, the exact random variables $ Z_n $ and approximate random variables $ \widetilde{Z}_n $ are tightly coupled by ensuring they are both generated using the same underlying random variables, where $ Z_n = \Phi^{-1}(U_n) $ and $ \widetilde{Z}_n = \widetilde{\Phi}^{-1}(U_n) $, where $ U_n $ is the same for both.
+
+\citet{giles2020approximating} consider the usual multilevel estimator $ \hat{\theta} $ and the nested multilevel estimator $ \overline{\theta} $ are
+\begin{equation*}
+\hat{\theta}  \coloneqq \sum_{l=0}^{L} \dfrac{1}{\widehat{m}_l} \sum^{\widehat{m}_l} \widehat{P}_l - \widehat{P}_{l-1}
+\qquad \text{and} \qquad
+\overline{\theta} \coloneqq \sum_{l=0}^L \dfrac{1}{\overline{m}_l} \sum^{\overline{m}_l} \overline{P}_l - \overline{P}_{l-1} + \dfrac{1}{\overline{M}_l} \sum^{\overline{M}_l} \widehat{P}_l - \widehat{P}_{l-1} - \overline{P}_l + \overline{P}_{l-1},
+\end{equation*}
+where $ \widehat{m}_l $, $ \overline{m}_l $, and $ \overline{M}_l $ are the number of paths generated, each with a computational time cost of $ \hat{c}_l $, $ \overline{c}_l $, and $ \overline{C}_l $, and variance $ \hat{v}_l $, $ \overline{v}_l $, and $ \overline{V}_l $ respectively. Letting $ \widehat{T} $ denote the total computational time to achieve a mean squared error $ \varepsilon^2 $ using the estimator $ \hat{\theta} $, and similarly $ \overline{T} $ using $ \overline{\theta} $, then \citet{giles2020approximating} show
+\begin{equation*}
+\widehat{T} = 2\varepsilon^{-2}\left(\sum_{l=0}^L \sqrt{\hat{v}_l \hat{c}_l}\right)^2 
+\qquad \text{and} \qquad 
+\overline{T} = 2\varepsilon^{-2} \left(\sum_{l=0}^L \sqrt{\overline{v}_l \overline{c}_l} + \sqrt{\overline{V}_l \overline{C}_l}\right)^2,
+\end{equation*}
+where the minimal number of paths required are given by
+\begin{equation*}
+\widehat{m}_l = \varepsilon^{-1} \sqrt{\dfrac{2\widehat{T}\hat{v}_l}{\hat{c}_l}},
+\qquad 
+\overline{m}_l  = \varepsilon^{-1} \sqrt{\dfrac{2\overline{T}\, \overline{v}_l}{\overline{c}_l}}, 
+\qquad 
+\text{and}
+\qquad 
+\overline{M}_l  = \varepsilon^{-1} \sqrt{\dfrac{2\overline{T}\, \overline{V}_l}{\overline{C}_l}},
+\end{equation*}
+and hence an overall saving of
+\begin{equation*}
+\overline{T} 
+\approx 2\varepsilon^{-2} \left(\sum_{l=0}^L \sqrt{\hat{v}_l \hat{c}_l} \left( \sqrt{\dfrac{\overline{v}_l\overline{c}_l}{\hat{v}_l\hat{c}_l}} + \sqrt{\dfrac{\overline{V}_l \overline{C}_l}{\hat{v}_l \hat{c}_l}}\right)\right)^2 
+\leq \widehat{T} \max_{l \leq L} \left\{ \dfrac{\overline{v}_l\overline{c}_l}{\hat{v}_l\hat{c}_l} \left(1 + \sqrt{\dfrac{\overline{V}_l \overline{C}_l}{\overline{v}_l \overline{c}_l}}\right)^2\right\}.
+\end{equation*}
+When the approximation's fidelity us such that $ \overline{v}_l \approx \hat{v}_l $, the term $ \tfrac{\overline{v}_l\overline{c}_l}{\hat{v}_l\hat{c}_l} \approx \tfrac{\overline{c}_l}{\hat{c}_l}$ measures the potential time savings, and the term $ (1 + (\overline{V}_l \overline{C}_l / \overline{v}_l \overline{c}_l)^{1/2})^2 $ assesses the efficiency of realising these savings. Achieving a balance between these two is required, where the approximation should be sufficiently fast so there is the potential for large savings, but of a sufficient fidelity so the variance of the more expensive four way difference is considerably lower than the variance of the cheaper two way difference.
+
+
+\citet{giles2020approximate,giles2020approximating} investigate the variance of this final four way difference when using approximate random variables assuming infinite precision arithmetic for a variety of functional types \citep[lemmas~4.10 and 4.11]{giles2020approximate} \citep[corollaries~6.2.6.2 and 6.2.6.3]{sheridan2020nested}. They find that for Lipschitz continuous and differentiable functionals that 
+\begin{equation*}
+\lVert \widehat{P}_l - \widehat{P}_{l-1} - \widetilde{P}_l + \widetilde{P}_{l-1}\rVert_p 
+\leq O(\delta^{1/2} \lVert Z - \widetilde{Z} \rVert_{p'}) 
+\end{equation*}
+for some  $ p' $ such that $ 2 \leq p < p' < \infty $, and that for Lipschitz continuous but non differential functionals that 
+\begin{equation*}
+\lVert \widehat{P}_l - \widehat{P}_{l-1} - \widetilde{P}_l + \widetilde{P}_{l-1}\rVert_p
+\leq O(\min\{
+\delta^{1/2} \lVert Z - \widetilde{Z} \rVert_{p'}^{p'(1-\epsilon)/(p'+1)},
+\delta^{(1-\epsilon)/2p -1/2p'}    \lVert Z - \widetilde{Z} \rVert_{p'}
+\})
+\end{equation*}
+for some  $ \epsilon $ such that $ 0<\epsilon<1 - \tfrac{p}{p'} $. The proofs of these results proceed via lemma~\ref{lemma:strong_error_bound}. For our purposes we will restrict our attention to this first class of functionals which are Lipschitz continuous and differentiable, and will consider just the underlying process, taking $ P(X)\equiv X $ for simplicity. 
+
+In an analogous manner to lemma~\ref{lemma:rounding_error_two_way} we can consider the variance of this four way difference arising in the nested multilevel Monte Carlo framework when the precision is simultaneously lowered when switching to approximate random variables, giving rise to lemma~\ref{lemma:rounding_error_four_way}.
+
+\begin{lemma}
+\label{lemma:rounding_error_four_way}
+For fine and coarse path simulations constructed using approximate random variables as described by \citet{giles2020approximate}, then with rounding errors described by model~\ref{model:rounding_errors} we have the 
+\begin{equation*}
+\mathbb{E}(\lvert \widehat{X}_l - \widehat{X}_{l-1} - \overline{X}_l + \overline{X}_{l-1}\rvert^2) 
+\approx O(\delta\, \mathbb{E}(\lvert Z - \widetilde{Z} \rvert^{2 + \epsilon})) + O(\delta^{-1}\varrho^2) 
+\end{equation*}
+as the discretisation $ \delta $ decreases for some $ \epsilon \in (0, \infty)$.
+\end{lemma}
+
+\begin{proof}
+The initial $ O(\delta\, \mathbb{E}(\lvert Z - \widetilde{Z} \rvert^{2 + \epsilon})) $ term comes from the result by \citet{giles2020approximate,giles2020approximating} taking $ P(x) \equiv X $ and $ p = 2 $. The second  $ O(\delta^{-1}\varrho^2)  $ term comes from the $ \eta $ and $ \eta' $ contributions from model~\ref{model:rounding_errors} and their final nett contribution arise using lemma~\ref{lemma:strong_error_bound} in an identical manner to the proof of lemma~\ref{lemma:rounding_error_two_way}. \qedhere
+\end{proof}
+
+We can compare the realised variances  predicted by  \citet{giles2020approximate,giles2020approximating} when using approximate random variables in infinite precision, with those predicted by lemma~\ref{lemma:rounding_error_four_way}. Using the piecewise linear approximation by \citet{giles2020approximating}, and use half precision capable hardware rather than emulation using the mpmath Python library. We use C code on a Nvidia Jetson AGX Xavier machine, containing a Nvidia 12 core Volta GPU and an 8 core Arm~v8.2 64 bit CPU. Both the CPU and the GPU support half precision floating point arithmetic in the hardware, and so we run the code on the CPU using the \texttt{\_Float16} data type for half precision, and compiled with \texttt{gcc} and notably with the flags \texttt{-O0} and \texttt{-march=armv8.2-a+fp16}. The first flag ensures no compiler optimisations are issued, guaranteeing the Kahan compensated summation is not removed by the compiler, and the second ensures half precision data types and operations are accessible and used. The results for the variances of the various multilevel Monte Carlo terms are shown in figure~\ref{fig:four_way_variance}.
+
+\begin{figure}[htb]
+\centering
+
+\hfil
+\subfigure{\centering \begin{minipage}[c]{0.49\linewidth}
+\centering
+\includegraphics{four_way_variance}
+\end{minipage}}\hfil
+\subfigure{\centering
+\begin{minipage}[c]{0.49\linewidth}
+\centering
+\renewcommand{\arraystretch}{1.4}  % This is only local to this one table
+\small
+\begin{tabular}{cllc}
+& Difference& Precision & Kahan \\ \hline 
+\raisebox{-0.1em}{\huge$ \bullet$} & $ \widehat{X}_l - \widehat{X}_{l-1} $ & Double & No\\
+%
+$ \bm{\times} $ & $ \overline{X}_l - \overline{X}_{l-1} $ & Half & No\\
+%
+{\large $ \blacktriangle $} & $ \overline{X}_l - \overline{X}_{l-1} $ & Half & Yes\\
+%
+{\large $ \blacktriangledown $} & $ \widehat{X}_l - \widehat{X}_{l-1} - \overline{X}_l + \overline{X}_{l-1} $& Single & No \\
+%
+$ \blacksquare $ &$ \widehat{X}_l - \widehat{X}_{l-1} - \overline{X}_l + \overline{X}_{l-1} $ & Half & No\\
+%
+$ \blacklozenge $ & $ \widehat{X}_l - \widehat{X}_{l-1} - \overline{X}_l + \overline{X}_{l-1} $ & Half & Yes\\[3em]
+\end{tabular}
+\end{minipage}
+}\hfil
+
+
+%\includegraphics{four_way_variance}
+\caption{The variance reduction when switching to approximate random variables with a nested multilevel Monte Carlo framework, showing the variances of various two and four way differences. The key indicates the difference, precision, and whether Kahan compensated summation is used.}
+\label{fig:four_way_variance}
+\end{figure}
+
+Inspecting figure~\ref{fig:four_way_variance} we can make several observations. The first is that the usual two way difference (computed in double precision) exhibits the usual $ O(\delta) $ variance decay rate, as is to be expected as a standard result \citep{kloeden1999numerical,glasserman2013monte}. 
+
+The next item of interest is the behaviour of the four way difference computed in single precision. Down to discretisations as fine as $ \delta \approx 2^{-13} $ we can see the variance decays at the same $ O(\delta) $ rate, as already predicted and demonstrated by \citet[4.1]{giles2020approximating}. However, the novel feature predicted by lemma~\ref{lemma:rounding_error_four_way} is the emergence of the $ O(\delta^{-1}) $ rate  for very fine discretisation, arising from model~\ref{model:rounding_errors}. We can see that the onset of rounding error is not immediately catastrophic, and that for $ \delta \approx 2^{-17} $ there is still a reduction in the variance between the two and four way differences which is still approximately $ 2^{-6} $. However, eventually, for discretisations as fine as $ \delta \approx 2^{-20} $ there is no reduction in variance. Ultimately, this demonstrates that double precision is typically superfluous for Monte Carlo path simulations (ignoring sensitivity calculations for computing derivatives by finite differences), and single precision is sufficient. 
+
+The main items of interest at the half precision variances. For simplicity we begin by inspecting the difference without Kahan compensated summation. The variance of the two way difference term decreases in line with the single precision two way difference down to approximately $ \delta \approx 2^{-7} $, and thereafter the effects of rounding error become dominant. This immediately places a upper limit on an uncompensated half precision framework, which is valid for discretisations $ \delta \geq 2^{-7} $. Considering the four way difference, we see that at the very coarsest level there is an appreciable variance reduction by a factor of approximately $ 2^{-12} $, although rounding error has already started to become dominant. We see that as the discretisations become finer the rounding error increases, and at $ \delta \geq 2^{-7} $ coincides with the two way difference. However, for discretisations coarser than $ \delta \geq 2^{-4} $, there is still at least a variance drop by approximately a factor of $ 2^{-6} $. This suggests that while half precision calculations may be fast, if the rounding error in not compensated for, then they are only useful on the coarsest few levels. 
+
+If we incorporate a Kahan compensated summation to the Euler-Maruyama scheme when using half precision approximate random variables, the picture improves. The first item to note is the variance of the two way difference, which mirrors the single precision's variance down to approximately $ \delta \approx  2^{-11} $, placing a lower limit on the minimum possible discretisation with $ \delta \geq 2^{-11} $. For the four way difference, at the very coarsest level we see approximately the same variance as the uncompensated half precision four way difference, as might be expected. However, with the compensation, the error is an $ O(1) $ constant as the discretisation becomes ever fine down to $ \delta \approx 2^{-10} $. For discretisations $ \delta <  2^{-10} $ a second order error process appears to dominate, and for such fine discretisations the two way and four way variances coincide. This suggests that half precision simulations using Kahan compensated summation are applicable for much finer discretisation. A variance reduction of approximately $ 2^{-6} $ is achieved for discretisations $ \delta \geq 2^{-8} $. Thus Kahan compensated summation approximately doubles the scope of practical applicability for half precision simulations. 
+
+
+
+
 
 
 \todo[inline=true, caption={multilevel Monte Carlo}]{
@@ -519,12 +660,8 @@ where the first approximation is the regular Monte Carlo procedure \citep{glasse
 \item Multilevel Monte Carlo 
 \begin{enumerate}
 \item Multilevel method and recovery of accuracy. 
-\item The error bound from our convenient lemma. 
-\item The simple 2 way error is the same as from arciniega and allen (using our concenient lemma). 
 \item The 4 way convenient lemma. 
-\item Kahan summation
 \item The variance reductions from simulations
-\item The applicability of half precision and Kahan summation version. 
 \item Can I get some C timings for path simulations using (savings from wider vectorisation and also lower precision calculations), using piecewise linear approximation with unions, or the LUT:
 \begin{enumerate}
 \item Double precision 
@@ -534,6 +671,7 @@ where the first approximation is the regular Monte Carlo procedure \citep{glasse
 \item Possibly both for the Euler and Milstein and GBM processes. 
 \end{enumerate}
 \item Calculate expected time savings. 
+\item Mention that with the Milstein scheme all the work is on the coarsest levels, so half precision is golden, and possible needn't require compensation (albeit Milstein does use a bit more arithmetic).
 \end{enumerate}
 \end{enumerate}
 }
