@@ -49,7 +49,7 @@ static inline uint32 get_table_index_from_float_32_format(float32 u)
 
     u_pun.as_float = u;
     uint32 b;
-    b = FLOAT32_AS_UINT32(u) >> N_MANTISSA_32; // Keeping only the exponent, and removing the mantissa.
+    b = u_pun.as_integer >> N_MANTISSA_32; // Keeping only the exponent, and removing the mantissa.
     b = FLOAT32_EXPONENT_BIAS_TABLE_OFFSET - b; // Getting the table index.
     b = b > TABLE_MAX_INDEX ? TABLE_MAX_INDEX : b;  // Ensuring we don't overflow out of the table.
     return b;
@@ -90,7 +90,7 @@ void piecewise_linear_approximation_single(unsigned int n_samples, const float32
     }
 }
 
-void piecewise_linear_approximation_half(unsigned int n_samples, const half16 *restrict input, half16 *restrict output);
+void piecewise_linear_approximation_half(unsigned int n_samples, const half16 *restrict input, half16 *restrict output)
 {
     #pragma omp simd
     for (unsigned int i = 0; i < n_samples; i++)
