@@ -251,7 +251,7 @@ def plot_error_model_4_way_variances(savefig=False, plot_from_json=True):
     if plot_from_json:
         with open('four_way_variance.json', "r") as file:
             results = json.load(file)
-        results = {k: {float(x): y for x,y in v.items()} for k,v in results.items()}
+        results = {k: {float(x): y for x, y in v.items()} for k, v in results.items()}
     else:
         df = pd.read_csv('kahan_data.csv', header=None)
         df.columns = 'dt,x_fine_exact_64,x_coarse_exact_64,x_fine_approx_32,x_coarse_approx_32,x_fine_approx_16,x_coarse_approx_16,x_fine_approx_16_kahan,x_coarse_approx_16_kahan'.split(',')
@@ -289,6 +289,72 @@ def plot_error_model_4_way_variances(savefig=False, plot_from_json=True):
         if not plot_from_json:
             with open('four_way_variance.json', "w") as file:
                 file.write(json.dumps(results, indent=4))
+
+
+def plot_error_model_4_way_savings(savefig=False, plot_from_json=True):
+    if plot_from_json:
+        with open('four_way_savings.json', "r") as file:
+            savings = json.load(file)
+        savings = {k: {x: {float(a): b for a, b in y.items()} for x, y in v.items()} for k, v in savings.items()}
+    else:
+        df = pd.read_csv('kahan_data.csv', header=None)
+        df.columns = 'dt,x_fine_exact_64,x_coarse_exact_64,x_fine_approx_32,x_coarse_approx_32,x_fine_approx_16,x_coarse_approx_16,x_fine_approx_16_kahan,x_coarse_approx_16_kahan'.split(',')
+        dt = df['dt']
+        originals = df['x_fine_exact_64'] - df['x_coarse_exact_64']
+        corrections_32 = (df['x_fine_exact_64'] - df['x_coarse_exact_64']) - (df['x_fine_approx_32'] - df['x_coarse_approx_32'])
+        corrections_16 = (df['x_fine_exact_64'] - df['x_coarse_exact_64']) - (df['x_fine_approx_16'] - df['x_coarse_approx_16'])
+        corrections_16_kahan = (df['x_fine_exact_64'] - df['x_coarse_exact_64']) - (df['x_fine_approx_16_kahan'] - df['x_coarse_approx_16_kahan'])
+        approx_estimator_16 = df['x_fine_approx_16'] - df['x_coarse_approx_16']
+        approx_estimator_16_kahan = df['x_fine_approx_16_kahan'] - df['x_coarse_approx_16_kahan']
+        terms = ['originals', 'corrections_32', 'corrections_16', 'corrections_16_kahan', 'approx_estimator_16', 'approx_estimator_16_kahan']
+        min_dts = {term: 2.0 ** -l for term, l in zip(terms, [20, 20, 8, 12, 12, 15])}
+        markers = {term: m for term, m in zip(terms, ['o', 'v', 's', 'd', 'x', '^'])}
+        dfs = [pd.concat([dt, df], axis=1) for df in [originals, corrections_32, corrections_16, corrections_16_kahan, approx_estimator_16, approx_estimator_16_kahan]]
+        for df in dfs: df.columns = ['dt', 'correction']
+        results = {term: df for term, df in zip(terms, dfs)}
+        for term, df in results.items():
+            variances = df.groupby('dt')['correction'].apply(np.var)
+            variances = variances[variances.index >= min_dts[term]]
+            results[term] = variances.to_dict()
+
+        savings = {term: {k: {} for k in ['speedup', 'efficiency']} for term in terms if 'correction' in term}
+        time_savings = {'32': 7.0, '16': 14.0, '16_kahan': 10.0}
+        for term in savings:
+            levels = sorted(results[term].keys())
+            for level in levels:
+                possible_saving = next((v for k, v in time_savings.items() if term.endswith(k)))
+                original_variance = results['originals'][level]
+                correction_variance = results[term][level]
+                variance_reduction = correction_variance / original_variance
+                savings[term]['speedup'][level], savings[term]['efficiency'][level] = speed_up_and_efficiency(variance_reduction, possible_saving)
+
+    plt.clf()
+    for term in savings:
+        x, y = zip(*savings[term]['speedup'].items())
+        plt.plot(x, y, 'k{}:'.format(markers[term]))
+    plt.xscale('log', basex=2)
+    plt.ylim(1, 12)
+    plt.yticks([1] + list(range(2, 12 + 1, 2)))
+    plt.ylabel('Speed up')
+    plt.xlim(2 ** -20, 2 ** 0)
+    plt.xlabel(r'Fine time increment $\delta^{\mathrm{f}}$')
+
+    if savefig:
+        plt.savefig('four_way_savings.pdf', format='pdf', bbox_inches='tight', transparent=True)
+        if not plot_from_json:
+            with open('four_way_savings.json', "w") as file:
+                file.write(json.dumps(savings, indent=4))
+
+
+def speed_up_and_efficiency(V, c):
+    c = 1.0 / c
+    C = 1.0 + c
+    e = (1.0 + np.sqrt(V * C / c)) ** 2
+    s = c * e
+    m = np.sqrt(s / c)
+    M = np.sqrt(s * V / C)
+    return (1.0 / s, 100.0 / e)
+
 
 if __name__ == '__main__':
     plot_params = dict(savefig=True, plot_from_json=True)

@@ -128,59 +128,6 @@ captionpos=b,
 
 \maketitle
 
-\clearpage
-\todo[inline=true, caption={general structure}]{
-\centerline{\textbf{General structure}}
-\begin{enumerate}
-\item Abstract
-\item Introduction
-\begin{enumerate}
-\item Background to the problem of rounding error and it's build up on stochastic simulation. 
-\item Modelling rounding error by Higham and Trefethen
-\item Previous omissions by Kloedon and Platen and Glasserman
-\item Previous models by Arcinega and Allen and also by Omland et al. 
-\item Previous use of compensation methods for ODEs. 
-\end{enumerate}
-\item Stochastic differential equations
-\begin{enumerate}
-\item The need for stochastic simulations.
-\item Approximate random variables make things go faster. 
-\begin{enumerate}
-\item Previous work by Mike and me on this and understanding the error. 
-\end{enumerate}
-\item Lower precisions make things go faster. 
-\begin{enumerate}
-\item Previous work by arcinega and allen and omland et al. 
-\end{enumerate}
-\item The Euler-Maruyama scheme has a build up of rounding error. 
-\end{enumerate}
-\item A leading order error model
-\begin{enumerate}
-\item The standard round to nearest even and other assumptions. 
-\item The significant and leading order terms. 
-\item Kahan summation
-\end{enumerate}
-\item Multilevel Monte Carlo 
-\begin{enumerate}
-\item The expected time savings. 
-\item The variance reductions from simulations
-\item The applicability of half precision and Kahan summation version. 
-\item Can I get some C timings for path simulations using (savings from wider vectorisation and also lower precision calculations), using piecewise linear approximation with unions, or the LUT:
-\begin{enumerate}
-\item Double precision 
-\item Single precision 
-\item Half precision
-\item Half precision with Kahan summation. 
-\item Possibly both for the Euler and Milstein and GBM processes. 
-\end{enumerate}
-\item Calculate expected time savings. 
-\end{enumerate}
-\item Conclusions
-\item Acknowledgements 
-\end{enumerate}
-}
-\clearpage
-
 \section{Introduction}
 \label{sec:introduction}
 
@@ -636,7 +583,6 @@ $ \blacklozenge $ & $ \widehat{X}_l - \widehat{X}_{l-1} - \overline{X}_l + \over
 \end{minipage}
 }\hfil
 
-
 %\includegraphics{four_way_variance}
 \caption{The variance reduction when switching to approximate random variables with a nested multilevel Monte Carlo framework, showing the variances of various two and four way differences. The key indicates the difference, precision, and whether Kahan compensated summation is used.}
 \label{fig:four_way_variance}
@@ -650,31 +596,46 @@ The main items of interest at the half precision variances. For simplicity we be
 
 If we incorporate a Kahan compensated summation to the Euler-Maruyama scheme when using half precision approximate random variables, the picture improves. The first item to note is the variance of the two way difference, which mirrors the single precision's variance down to approximately $ \delta \approx  2^{-11} $, placing a lower limit on the minimum possible discretisation with $ \delta \geq 2^{-11} $. For the four way difference, at the very coarsest level we see approximately the same variance as the uncompensated half precision four way difference, as might be expected. However, with the compensation, the error is an $ O(1) $ constant as the discretisation becomes ever fine down to $ \delta \approx 2^{-10} $. For discretisations $ \delta <  2^{-10} $ a second order error process appears to dominate, and for such fine discretisations the two way and four way variances coincide. This suggests that half precision simulations using Kahan compensated summation are applicable for much finer discretisation. A variance reduction of approximately $ 2^{-6} $ is achieved for discretisations $ \delta \geq 2^{-8} $. Thus Kahan compensated summation approximately doubles the scope of practical applicability for half precision simulations. 
 
+\todo[inline=true, caption={Get some data}]{I would like to get my hands on some real timing data rather than more speculative data.}
 
+\begin{table}[htb]
+\centering
+\caption{Performance of various approximations and implementations of the inverse Gaussian cumulative distribution function, and the possible speed ups offered.}
+\label{tab:implementations}
 
+\hfil 
+\subfigure[The time to generate exact and approximate Gaussian random variables.\label{tab:implementation_times}]{
+\begin{tabular}{llll}
+Description & Precision &  Clock cycles& Source\\ 
+\hline
+Intel (HA) & Single &  $ 3.5 \pm 0.2 $ & \citep{giles2020approximating}\\
+Piecewise linear& Single &   $ 0.5  \pm 0.1 $ & \citep{giles2020approximating} \\
+Piecewise linear& Half &   $ 0.25 $ & Speculated
+\end{tabular}}\hfil \hfil 
+\subfigure[The maximum possible speed ups.\label{tab:implementation_speedups}]{
+\begin{tabular}{ccc}
+Precision & Kahan & Speed up \\
+\hline
+Single & No & 7 \\
+Half & No & 14 \\
+Half & Yes & 10
+\end{tabular}
+}\hfil 
+\end{table}
 
+We take the timing results on Intel AVX-512 Skylake hardware from \citet{giles2020approximating}. For the exact Gaussian distribution, we take our baseline the single precision Intel high accuracy (HA) function, and speculate that for the approximate random variables, that half precision input can be processed in half the time as single precision input. Overall then we have the times shown in table~\ref{tab:implementation_times}. We make the idealised assumption that cost of the simulations is entirely based on the cost of generating random numbers, and neglect the cost of all other arithmetic operations. These give the maximum potential speed ups shown in table~\ref{tab:implementation_speedups}, where for the half precision approximation using half precision we speculate an intermediate value between the single and half precision offerings. 
 
+For each possible discretisation level, the estimated speed ups predicted for each individual level from the nested multilevel Monte Carlo analysis are shown in figure~\ref{fig:four_way_savings}. We can see from this that for the bulk of levels the single precision approximation offers a good potential speed up by a factor of approximately 7. However, for the very coarsest few levels, the half precision approximations without Kahan compensated summation offer superior speed ups by a factor of 10--12. Dependent on the speed reduction that comes from incorporating the half precision Kahan compensated summation, there is the possibility of these offering a third intermediate regime where they are they optimal choice. For our speculated speed up from table~\ref{tab:implementation_speedups} we see there appears to be such an intermediate region, although it is not overwhelmingly competitive compared to the two other alternatives. 
 
-\todo[inline=true, caption={multilevel Monte Carlo}]{
-\begin{enumerate}
-\item Multilevel Monte Carlo 
-\begin{enumerate}
-\item Multilevel method and recovery of accuracy. 
-\item The 4 way convenient lemma. 
-\item The variance reductions from simulations
-\item Can I get some C timings for path simulations using (savings from wider vectorisation and also lower precision calculations), using piecewise linear approximation with unions, or the LUT:
-\begin{enumerate}
-\item Double precision 
-\item Single precision 
-\item Half precision
-\item Half precision with Kahan summation. 
-\item Possibly both for the Euler and Milstein and GBM processes. 
-\end{enumerate}
-\item Calculate expected time savings. 
-\item Mention that with the Milstein scheme all the work is on the coarsest levels, so half precision is golden, and possible needn't require compensation (albeit Milstein does use a bit more arithmetic).
-\end{enumerate}
-\end{enumerate}
-}
+\begin{figure}[htb]
+\centering
+\includegraphics{four_way_savings}
+
+\caption{The potential savings from a nested multilevel Monte Carlo framework using approximate random variables from a piecewise linear approximation for various discretisation levels.({\large $ \blacktriangledown $}) Single precision. ($ \blacksquare $) Half precision without Kahan compensated summation. ($ \blacklozenge $) Half precision with Kahan compensated summation.}
+\label{fig:four_way_savings}
+\end{figure}
+
+It is worth remarking that when using the Euler-Maruyama scheme, as the scheme has a strong convergence order of $ \tfrac{1}{2} $, the computational work load is approximately spread evenly over the various levels \citep{giles2008multilevel}. However, for numeric schemes with strong convergence orders, such as the Milstein scheme which has order 1 strong convergence \citep{kloeden1999numerical,glasserman2013monte}, the work load is predominantly concentrated on the coarsest levels. The implication of this is that the potential half precision speed ups offered on the coarsest levels, even without Kahan compensated summation, may well dominate the multilevel savings. Hence, while half precision appears attractive even with multilevel Monte Carlo frameworks using the Euler-Maruyama scheme, this becomes even more so for the Milstein scheme and other higher order methods. 
 
 \section{Conclusions}
 \label{sec:conclusions}
