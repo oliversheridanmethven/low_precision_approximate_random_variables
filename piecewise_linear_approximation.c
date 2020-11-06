@@ -99,7 +99,7 @@ void piecewise_linear_approximation_half(unsigned int n_samples, const half16 *r
         u = input[i];
         bool predicate = u < 0.5f;
         u = predicate ? u : 1.0f - u;
-        uint32 b = get_table_index_from_float_16_format(u);
+        uint16 b = get_table_index_from_float_16_format(u);
         z = polynomial_approximation_16(u, b);
         z = predicate ? z : -z;
         output[i] = z;
