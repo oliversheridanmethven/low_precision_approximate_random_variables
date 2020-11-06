@@ -1,144 +1,97 @@
-\documentclass[manuscript,review]{acmart}
+\documentclass[9pt,a4paper,english]{extarticle}
 
+\pdfoutput=1
 \let\Bbbk\undefined % Undefines some symbols for amssymb (e.g. so I can use \blacklozenge)
+\usepackage{abstract}
 \usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage[boxed, vlined, linesnumbered, resetcount]{algorithm2e} 
 \usepackage{bm}
+\usepackage{bbm}
+\usepackage{datenumber}
+\usepackage{datetime}
+\usepackage{dsfont}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{mathtools}
 \usepackage{multirow}
+\usepackage[numbers, sort&compress]{natbib}
+\usepackage[super]{nth}
 \usepackage{physics}
+\usepackage[scr,scaled=1.1]{rsfso}
 \usepackage{subfigure}
 \usepackage[binary-units=true]{siunitx}
 \usepackage{todonotes}
-\usepackage{hyperref} % Should usually be loaded last. 
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage[top=20mm,bottom=20mm,left=20mm, right=20mm]{geometry}
 
 \newfloat{lstfloat}{htbp}{lop} % To put the listings in. 
 \renewcommand{\lstlistingname}{Code} % Rename them as codes. 
 
+\renewcommand{\abstractname}{}    % Clear the abstract's title.
 
 \SetAlCapSty{} % Removes bold in caption for consistency. 
-\SetAlCapSkip{0.5em} % Increase algorithm spacing between box and caption.
-\SetAlCapNameFnt{\small\sffamily}
-\SetAlCapFnt{\small\sffamily}
-\SetAlgoCaptionSeparator{.}
+\SetAlCapSkip{1em} % Increase algorithm spacing between box and caption.
+\SetAlCapNameFnt{}
+\SetAlCapFnt{}
+\SetAlgoCaptionSeparator{:}
 
 % For formatting the C code. 
 \lstdefinestyle{C}{
-language=C,
-basicstyle=\small\ttfamily,
-keywordstyle=\small\ttfamily,
-morekeywords={omp,simd,reduction,simdlen,declare,inline,bool,restrict,half},
-otherkeywords={\#pragma,\_\_fp16},
-frame = single,
-captionpos=b,
+    language=C,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\small\ttfamily,
+    morekeywords={omp,simd,reduction,simdlen,declare,inline,bool,restrict,half},
+    otherkeywords={\#pragma,\_\_fp16},
+    frame = single,
+    captionpos=b,
+    abovecaptionskip=1em,
 }
 
 
 \DeclareMathOperator*{\argmin}{argmin} % For argmin. 
-\newcommand{\indicatorfn}{\vmathbb{1}}
+\newcommand{\indicatorfn}{\mathds{1}}
 
+\bibliographystyle{plainnat} % Alphabetical. 
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{assumption}{Assumption}[section]
 \newtheorem{model}{Model}[section]
 
-\citestyle{acmnumeric} % For the numeric citation style. 
+\title{\Huge Rounding error using low precision approximate random variables}
 
-\title{Rounding error using low precision approximate random variables}
+\author{
+\href{mailto:mike.giles@maths.ox.ac.uk}{Michael Giles}%
+\thanks{\href{mailto:mike.giles@maths.ox.ac.uk}%
+{\texttt{mike.giles@maths.ox.ac.uk}}} 
+\and 
+\href{mailto:oliver.sheridan-methven@hotmail.co.uk}{Oliver Sheridan-Methven}%
+\thanks{\href{mailto:oliver.sheridan-methven@hotmail.co.uk}%
+{\texttt{oliver.sheridan-methven@hotmail.co.uk}}}
+}
 
-\author{Michael Giles}
-\email{mike.giles@maths.ox.ac.uk}
-
-\author{Oliver Sheridan-Methven}
-\email{oliver.sheridan-methven@hotmail.co.uk}
-
-\affiliation{%
-\institution{Mathematical Institute, Oxford University}
-\city{Oxford}
-\country{UK}}
-
-\keywords{approximations, random variables, inverse cumulative distribution functions, random number generation, finite precision, half precision, floating point, rounding error, multilevel Monte Carlo, the Euler-Maruyama scheme, the Milstein scheme, Kahan compensated summation, and high performance computing.}
+\date{
+Mathematical Institute, Oxford University, UK\\[1em]
+\datedayname\ \nth{\number\day} \monthname\  \number\year}
 
 \begin{document}
 
+\maketitle
+
 \begin{abstract}
 For numerical approximations to stochastic differential equations using the Euler-Maruyama scheme, we propose incorporating approximate random variables computed using low precisions, such as single and half precision. We propose and justify a model for the rounding error incurred, and produce an average case error bound for two and four way differences, appropriate for regular and nested multilevel Monte Carlo estimations. By considering the variance structure of  multilevel Monte Carlo correction terms in various precisions with and without a Kahan compensated summation, we compute the potential speed ups offered from the various precisions. We find single precision offers the potential for approximate speed improvements by a factor of 7 across a wide span of discretisation levels. Half precision offers comparable improvements for several levels of coarse simulations, and even offers improvements by a factor of 10--12 for the very coarsest few levels. 
+
+\begin{description}
+\item[Keywords:] approximations, random variables, inverse cumulative distribution functions, random number generation, finite precision, half precision, floating point, rounding error, multilevel Monte Carlo, the Euler-Maruyama scheme, the Milstein scheme, Kahan compensated summation, and high performance computing.
+% cf. https://mathscinet.ams.org/mathscinet/msc/msc2020.html
+\item[MSC subject classification:] 	65G50, 65C10, 41A10, 65C05, 65Y20, 60H35, 65B10, 65L70, 34M30, 97N20, and 65C30.
+\end{description}
 \end{abstract}
 
-% cf. https://dl.acm.org/ccs#
-\begin{CCSXML}
-<ccs2012>
-   <concept>
-       <concept_id>10002950.10003705.10011686</concept_id>
-       <concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
-       <concept_significance>500</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003705.10003708</concept_id>
-       <concept_desc>Mathematics of computing~Statistical software</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003648.10003703</concept_id>
-       <concept_desc>Mathematics of computing~Distribution functions</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003648.10003700</concept_id>
-       <concept_desc>Mathematics of computing~Stochastic processes</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003648.10003670.10003687</concept_id>
-       <concept_desc>Mathematics of computing~Random number generation</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003648.10003649.10003656</concept_id>
-       <concept_desc>Mathematics of computing~Stochastic differential equations</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10002950.10003714.10003715</concept_id>
-       <concept_desc>Mathematics of computing~Numerical analysis</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010169.10010170.10010173</concept_id>
-       <concept_desc>Computing methodologies~Vector / streaming algorithms</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010169.10010170.10010174</concept_id>
-       <concept_desc>Computing methodologies~Massively parallel algorithms</concept_desc>
-       <concept_significance>100</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010147.10010341.10010342.10010345</concept_id>
-       <concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10010405.10010432.10010442</concept_id>
-       <concept_desc>Applied computing~Mathematics and statistics</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
- </ccs2012>
-\end{CCSXML}
-
-\ccsdesc[500]{Mathematics of computing~Mathematical software performance}
-\ccsdesc[300]{Mathematics of computing~Statistical software}
-\ccsdesc[100]{Mathematics of computing~Distribution functions}
-\ccsdesc[300]{Mathematics of computing~Stochastic processes}
-\ccsdesc[100]{Mathematics of computing~Random number generation}
-\ccsdesc[100]{Mathematics of computing~Stochastic differential equations}
-\ccsdesc[100]{Mathematics of computing~Numerical analysis}
-\ccsdesc[100]{Computing methodologies~Vector / streaming algorithms}
-\ccsdesc[100]{Computing methodologies~Massively parallel algorithms}
-\ccsdesc[300]{Computing methodologies~Uncertainty quantification}
-\ccsdesc[300]{Applied computing~Mathematics and statistics}
-
-\maketitle
 
 \section{Introduction}
 \label{sec:introduction}
@@ -193,8 +146,6 @@ One of the approximations we will utilise later is the piecewise linear approxim
 
 \caption{A piecewise linear approximation of the Gaussian distribution's inverse cumulative distribution function, and the resultant probability density function.}
 \label{fig:piecewise_linear_approximation}
-
-\Description{The piecewise linear approximation closely resembles the Gaussian distribution's inverse cumulative distribution function with a high fidelity. The resultant probability density function is a sequence of piecewise constant values whose shape somewhat resembles the exact probability density function. There are a few points of discontinuity which are bounded in size, and it has finite support.}
 \end{figure}
 
 \begin{assumption}
@@ -296,8 +247,6 @@ Inspecting the first term, we can see this is the absolute error resulting from 
 \subfigure[Possible values for $ \zeta $ in $ I'_y $, demonstrating when the round to nearest even tie break causes rounding error by shaded regions. We denote $ \zeta $ with ``$ \blacksquare $'', and $ z $ with ``$ \square $''.\label{fig:round_to_nearest_even_tie_break_error}]{\includegraphics{round_to_nearest_even_tie_break_error}}
 \caption{Rounding to the nearest even. We denote even representable values using ``\raisebox{-0.25em}{\Huge$ \bullet $}'', odd values using ``\raisebox{0.05em}{$ \bigcirc $}''. Arrows show the values rounded to.}
 \label{fig:round_to_nearest_even}
-
-\Description{Rounding to nearest even for various possible input values. For single values landing between two representable numbers, the value is simple rounded up or down to the nearest number. For two values landing within a triplet of representable numbers, the two only round differently when one of the values lies exactly half way between two values, engaging the round to nearest even tie break rule.}
 \end{figure}
 
 We can then evaluate the expectation $ \mathbb{E}((R(z) - z)\indicatorfn_{\{z \in I_y\}}) $ where we have 
@@ -425,8 +374,6 @@ We can see from figure~\ref{fig:two_way_variance_approximation} that we approxim
 \caption{The variance of the difference between the exact Euler-Maruyama estimate and the estimate using low precision approximate random variables from a piecewise cubic approximation with different precisions, corresponding to lemma~\ref{lemma:rounding_error_two_way}. The precisions use differing numbers of bits for the mantissa. ($ \blacklozenge $) 7 bits. ($ \blacksquare $) 10 bits. (\raisebox{-0.1em}{\huge$ \bullet$})
 16 bits. ({\large $ \blacktriangledown $}) 23 bits.}
 \label{fig:two_way_variances}
-
-\Description{The variance of the two way multilevel difference with and without Kahan compensated summation. For the two way differences for very low precisions the variance increases primarily due to rounding error at the predicted rate. For very high precisions, the variance appears a constant for various discretisations, as the error from approximating the Gaussian distribution dominates. When using Kahan compensated summation, all the variances appear a constant. There are gaps between low and medium precision levels. However, for intermediate and higher precisions, there is no gap in the variance when using Kahan compensated summation, again showing the error is primarily due to approximating the Gaussian distribution.}
 \end{figure}
 
 \subsection{Kahan compensated summation}
@@ -575,8 +522,6 @@ $ \blacklozenge $ & $ \widehat{X}_l - \widehat{X}_{l-1} - \overline{X}_l + \over
 
 \caption{The variance reduction when switching to approximate random variables with a nested multilevel Monte Carlo framework, showing the variances of various two and four way differences. The key indicates the difference, precision, and whether Kahan compensated summation is used.}
 \label{fig:four_way_variance}
-
-\Description{The variance for the various multilevel terms. The double precision variance is moderately high but decreases at the usual rate with strong convergence order a half. Similar decay is observed for the two way differences in low precisions, except where after a few levels the half precision two way difference starts to increase due to rounding error. The same effect similarly happens for when using Kahan compensated summation, albeit at a finer discretisation. The variance of the four way difference in single precision is much lower than the the two way difference, and decreases at a similar rate, until at very fine discretisations when rounding error sets in. For four way differences in half precision, the onset of rounding error is immediate, and without Kahan compensated summation the rounding error quickly increases up to the two way variance after just a few levels. Using Kahan compensated summation for the four way difference in half precision gives a constant variance which extends for several levels, only coinciding with the two way difference at a more intermediate discretisation level.}
 \end{figure}
 
 Inspecting figure~\ref{fig:four_way_variance} we can make several observations. The first is that the usual two way difference (computed in double precision) exhibits the usual $ O(\delta) $ variance decay rate, as is to be expected and is a standard result \citep{kloeden1999numerical,glasserman2013monte}. 
@@ -622,8 +567,6 @@ For each possible discretisation level, the estimated speed ups predicted for ea
 
 \caption{The potential savings from a nested multilevel Monte Carlo framework using approximate random variables from a piecewise linear approximation for various discretisation levels. ({\large $ \blacktriangledown $}) Single precision. ($ \blacksquare $) Half precision without Kahan compensated summation. ($ \blacklozenge $) Half precision with Kahan compensated summation.}
 \label{fig:four_way_savings}
-
-\Description{The speed ups from using the low precision nested multilevel Monte Carlo estimators. The single precision offers a speed up of approximately seven for most discretisations, although this diminishes for very fine discretisations. For half precision without Kahan compensation, at the very coarsest two levels the speed up is approximately a factor of 10--12, although that is rapidly diminishing as the levels become finer. The half precision scheme using Kahan compensated summation is similar, except with a slightly less impressively initial speed up of a factor of approximately 9, but the speed ups diminish at a much slower rate, giving a brief intermediate region where it is the fastest of the three choices, although not by a particularly large or competitive margin.}
 \end{figure}
 
 It is worth remarking that when using the Euler-Maruyama scheme, as the scheme has a strong convergence order of $ \tfrac{1}{2} $, the computational work load is approximately spread evenly over the various levels \citep{giles2008multilevel}. However, for numerical schemes with higher strong convergence orders, such as the Milstein scheme which has order 1 strong convergence \citep{kloeden1999numerical,glasserman2013monte}, the work load is predominantly concentrated on the coarsest levels \citep{giles2008multilevel}. The implication of this is that the potential half precision speed ups offered on the coarsest levels, even without Kahan compensated summation, may well dominate the multilevel savings. Hence, while half precision appears attractive even with multilevel Monte Carlo frameworks using the Euler-Maruyama scheme, this becomes even more so for the Milstein scheme and other higher order methods. 
@@ -650,7 +593,7 @@ All of the code to produce these figures is freely available and hosted by \cite
 
 We would like to acknowledge and thank those who have financially sponsored this work. This includes the Engineering and Physical Sciences Research Council (EPSRC) and Oxford University's centre for doctoral training in Industrially Focused Mathematical Modelling (InFoMM), with the EP/L015803/1 funding grant. Furthermore, this research stems from a PhD project \citep{sheridan2020nested} which was funded by Arm and NAG. Additionally, funding was also provided by the Inference, Computation and Numerics for Insights into Cities (ICONIC) project, and the programme grant EP/P020720/1. Lastly, Mansfield College Oxford also contributed funds.  
 
-\bibliographystyle{ACM-Reference-Format}
-\bibliography{references}
+
+\bibliography{../references}
 
 \end{document}
