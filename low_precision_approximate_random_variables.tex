@@ -57,74 +57,86 @@ captionpos=b,
 \city{Oxford}
 \country{UK}}
 
-\keywords{approximations, random variables, inverse cumulative distribution functions, random number generation, finite precision, floating point, rounding error, multilevel Monte Carlo, the Euler-Maruyama scheme, the Milstein scheme, and high performance computing.}
+\keywords{approximations, random variables, inverse cumulative distribution functions, random number generation, finite precision, floating point, rounding error, multilevel Monte Carlo, the Euler-Maruyama scheme, the Milstein scheme, Kahan compensated summation, and high performance computing.}
 
 \begin{document}
 
 \begin{abstract}
-
+For numerical approximations to stochastic differential equations using the Euler-Maruyama scheme, we propose incorporating approximate random variables computed using low precisions, such as single and half precision. We propose and justify a model for the rounding error incurred, and produce an average case error bound for two and four way differences, appropriate for regular and nested multilevel Monte Carlo estimations. By considering the variance structure of  multilevel Monte Carlo correction terms in various precisions with and without a Kahan compensated summation, we compute the potential speed ups offered from the various precisions. We find single precision offers the potential for approximate speed improvements by a factor of 7 across a wide span of levels. Half precision offers comparable improvements several levels of coarse simulations, and even offers improvements by a factor of 10--12 for the very coarsest few levels. 
 \end{abstract}
 
 % cf. https://dl.acm.org/ccs#
 \begin{CCSXML}
 <ccs2012>
-<concept>
-<concept_id>10002950.10003714.10003715</concept_id>
-<concept_desc>Mathematics of computing~Numerical analysis</concept_desc>
-<concept_significance>500</concept_significance>
-</concept>
-<concept>
-<concept_id>10002950.10003705.10011686</concept_id>
-<concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-<concept>
-<concept_id>10002950.10003705.10003708</concept_id>
-<concept_desc>Mathematics of computing~Statistical software</concept_desc>
-<concept_significance>500</concept_significance>
-</concept>
-<concept>
-<concept_id>10002950.10003714.10003736.10003737</concept_id>
-<concept_desc>Mathematics of computing~Approximation</concept_desc>
-<concept_significance>100</concept_significance>
-</concept>
-<concept>
-<concept_id>10002950.10003741.10003746</concept_id>
-<concept_desc>Mathematics of computing~Continuous functions</concept_desc>
-<concept_significance>100</concept_significance>
-</concept>
-<concept>
-<concept_id>10010147.10010169.10010170.10010173</concept_id>
-<concept_desc>Computing methodologies~Vector / streaming algorithms</concept_desc>
-<concept_significance>100</concept_significance>
-</concept>
-<concept>
-<concept_id>10010147.10010341.10010342.10010345</concept_id>
-<concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-<concept>
-<concept_id>10010147.10010341.10010349.10010345</concept_id>
-<concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-<concept>
-<concept_id>10010147.10010341.10010349.10010362</concept_id>
-<concept_desc>Computing methodologies~Massively parallel and high-performance simulations</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-</ccs2012>
+   <concept>
+       <concept_id>10002950.10003705.10011686</concept_id>
+       <concept_desc>Mathematics of computing~Mathematical software performance</concept_desc>
+       <concept_significance>500</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003705.10003708</concept_id>
+       <concept_desc>Mathematics of computing~Statistical software</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003648.10003703</concept_id>
+       <concept_desc>Mathematics of computing~Distribution functions</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003648.10003700</concept_id>
+       <concept_desc>Mathematics of computing~Stochastic processes</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003648.10003670.10003687</concept_id>
+       <concept_desc>Mathematics of computing~Random number generation</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003648.10003649.10003656</concept_id>
+       <concept_desc>Mathematics of computing~Stochastic differential equations</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002950.10003714.10003715</concept_id>
+       <concept_desc>Mathematics of computing~Numerical analysis</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010169.10010170.10010173</concept_id>
+       <concept_desc>Computing methodologies~Vector / streaming algorithms</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010169.10010170.10010174</concept_id>
+       <concept_desc>Computing methodologies~Massively parallel algorithms</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010341.10010342.10010345</concept_id>
+       <concept_desc>Computing methodologies~Uncertainty quantification</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010405.10010432.10010442</concept_id>
+       <concept_desc>Applied computing~Mathematics and statistics</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+ </ccs2012>
 \end{CCSXML}
 
-\ccsdesc[500]{Mathematics of computing~Numerical analysis}
-\ccsdesc[300]{Mathematics of computing~Mathematical software performance}
-\ccsdesc[500]{Mathematics of computing~Statistical software}
-\ccsdesc[100]{Mathematics of computing~Approximation}
-\ccsdesc[100]{Mathematics of computing~Continuous functions}
+\ccsdesc[500]{Mathematics of computing~Mathematical software performance}
+\ccsdesc[300]{Mathematics of computing~Statistical software}
+\ccsdesc[100]{Mathematics of computing~Distribution functions}
+\ccsdesc[300]{Mathematics of computing~Stochastic processes}
+\ccsdesc[100]{Mathematics of computing~Random number generation}
+\ccsdesc[100]{Mathematics of computing~Stochastic differential equations}
+\ccsdesc[100]{Mathematics of computing~Numerical analysis}
 \ccsdesc[100]{Computing methodologies~Vector / streaming algorithms}
+\ccsdesc[100]{Computing methodologies~Massively parallel algorithms}
 \ccsdesc[300]{Computing methodologies~Uncertainty quantification}
-\ccsdesc[300]{Computing methodologies~Uncertainty quantification}
-\ccsdesc[300]{Computing methodologies~Massively parallel and high-performance simulations}
+\ccsdesc[300]{Applied computing~Mathematics and statistics}
 
 \maketitle
 
@@ -637,8 +649,22 @@ For each possible discretisation level, the estimated speed ups predicted for ea
 
 It is worth remarking that when using the Euler-Maruyama scheme, as the scheme has a strong convergence order of $ \tfrac{1}{2} $, the computational work load is approximately spread evenly over the various levels \citep{giles2008multilevel}. However, for numeric schemes with strong convergence orders, such as the Milstein scheme which has order 1 strong convergence \citep{kloeden1999numerical,glasserman2013monte}, the work load is predominantly concentrated on the coarsest levels. The implication of this is that the potential half precision speed ups offered on the coarsest levels, even without Kahan compensated summation, may well dominate the multilevel savings. Hence, while half precision appears attractive even with multilevel Monte Carlo frameworks using the Euler-Maruyama scheme, this becomes even more so for the Milstein scheme and other higher order methods. 
 
+\todo{Mention bfloat16 would likely have the same speed as FP16 but more considerable rounding error, so very unclear if it will be applicable based on this figure.}
+
 \section{Conclusions}
 \label{sec:conclusions}
+
+Performing calculations in high precisions may assuage worries about rounding errors, but makes several computations needlessly expensive. Considering the numerical simulation of stochastic differential equations, based on previous work using computationally cheap approximate random variables, we couple their incorporation into the Euler-Maruyama scheme with low precision implementations. We introduce a new model for the nett rounding error incurred which allows for systematic and unsystematic errors, analysing how the two can be balanced under appropriate assumptions. Kahan compensated summation is also discussed as a means of removing the leading order rounding error. This rounding error model is incorporated into a nested multilevel Monte Carlo scheme allowing for the speed to be capitalised on without losing accuracy, finding that single precision is applicable for most discretisations and offers good potential speed ups, while half precision appears applicable at only the coarsest few discretisation levels but offering superior speed ups. 
+
+Introducing finite precision calculations, we discuss the appeal of working in ever lower precisions, and the appeal of using half precision in various application. Low precision offers improved speed by increasing bandwidth and decreasing some floating point calculation times, and is rapidly gaining traction in software and hardware, primarily due to applications in machine learning. However, low precision comes with appreciable finite precision rounding error, whose effects are felt in linear algebra, machine learning, stochastic simulation, and various other applications. To mitigate against this there are high precision libraries, compensated summation schemes, and mathematical techniques such as Richardson extrapolation, although the problem can be severe for 16 bit floating point formats such as \texttt{\_Float16} or \texttt{bfloat16}.
+
+Considering the setting of stochastic simulations and approximating solutions of stochastic differential equations using the Euler-Maruyama scheme we introduce model~\ref{model:rounding_errors} as a novel description for the effects of rounding error. Similar previous models for rounding error in this setting are notably from \citet{arciniega2003rounding} and \citet{omland2016mixed}, for the average case and worst case scenarios respectively. The model we introduce is based on the framework by \citet{omland2016mixed} and recovers a similar model to the one by \citet{arciniega2003rounding}. However, comparing our model to that from \citet{arciniega2003rounding}, ours has several benefits. Firstly, ours facilitates the incorporation of approximate random variables, which \citet{giles2020approximating} showed offers considerable potential speed improvements. Our model rigorously justifies a leading order zero mean contribution, and permits a smaller second order and possibly non zero mean contribution, thus facilitating systematic and non systematic errors. Using lemma~\ref{lemma:strong_error_bound} we show the nett contributions from these two terms grow at the same rate for the Euler-Maruyama scheme, providing novel insight into the size permissible for systematic errors. 
+
+Reviewing Kahan compensated summation, we discuss the leading order constant error this can be expected to produce. We numerically simulated geometric Brownian motion processes, finding the errors predicted by lemma~\ref{lemma:rounding_error_two_way} are can be observed empirically, alongside the anticipated error resulting from incorporating Kahan compensated summation. Furthermore, while Kahan compensated summation cancels the leading order rounding error, there is a balance between this a leading order error resulting from using approximate random variables, which becomes the dominant source of error in low precision simulations. 
+
+Low precision implementations of approximate random variables are best utilised with a multilevel Monte Carlo framework, paralleling the setup by \citet{giles2020approximating}. This has the potential for realising the potential speed ups offered from low precision calculations without losing any accuracy. The nested multilevel Monte Carlo setup produces a four way difference, whose variance we predict in lemma~\ref{lemma:rounding_error_four_way} and empirically observe, finding the errors introduced from introducing approximate random variables and also from low precision calculations are orthogonal effects. Using the nested multilevel Monte Carlo framework, we calculate that for a very wide range of possible discretisation levels that single precision simulations offer a speed up by a factor of approximately 7, as already shown by \citet{giles2020approximating}. However, for the very coarsest few levels, we demonstrated that half precision calculations, despite incurring rounding error, can be successfully utilised within a multilevel Monte Carlo scheme. On these coarsest few levels they offer speed improvements by a factor of 10--12. For the Euler-Maruyama scheme the work load is usually evenly spread across the various levels, whereas for the higher order Milstein method the work load is dominated by the coarsest few levels. Thus we have been able to demonstrate the utility and applicability of half precision approximate random variables for stochastic simulation applications. Lastly, dependent on the cost model for the added arithmetic required for Kahan compensated summation, we were also able to demonstrate that this may provide a further intermediate region, extending the range of half precision to even finer discretisation levels, compounding their benefits. 
+
+All of the code to produce these figures is freely available and hosted by \citet{sheridan2020low_precision}. 
 
 \section{Acknowledgements}
 \label{sec:acknowledgements}
