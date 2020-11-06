@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.7">
-<info created="D:20180209141659" modified="D:20201106180356"/>
-<preamble>\usepackage{amsmath,amssymb,bbm,bm}
-%\usepackage{libertine}
-%\usepackage[libertine]{newtxmath}	</preamble>
+<info created="D:20180209141659" modified="D:20201106192957"/>
+<preamble>\usepackage{amsmath,amssymb,bbm,bm}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -258,76 +256,75 @@ h
 <page>
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
-<path layer="alpha" matrix="1 0 0 1 144 0" fill="lightgray">
+<text layer="alpha" matrix="0.52108 0 0 1 25.2544 4" transformations="translations" pos="192 144" stroke="black" type="label" width="4.86" height="3.864" depth="1.74" halign="center" valign="baseline" size="small" style="math">y</text>
+<text matrix="0.52108 0 0 1 -41.4438 4" transformations="translations" pos="192 144" stroke="black" type="label" width="24.797" height="5.782" depth="1.74" halign="center" valign="baseline" size="small" style="math">y - 2\varsigma</text>
+<text matrix="0.52108 0 0 1 91.9526 4" transformations="translations" pos="192 144" stroke="black" type="label" width="24.797" height="5.782" depth="1.74" halign="center" valign="baseline" size="small" style="math">y + 2\varsigma</text>
+<text matrix="0.52108 0 0 1 -8.09471 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y - \varsigma</text>
+<text matrix="0.52108 0 0 1 58.6035 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y + \varsigma</text>
+<text matrix="0.52108 0 0 1 12.7485 4" transformations="translations" pos="192 144" stroke="black" type="label" width="6.751" height="7.132" depth="0.87" halign="center" valign="baseline" size="small" style="math">\varsigma&apos;</text>
+<path matrix="0.52108 0 0 0.692308 100.29 48" fill="lightgray">
 112 208 m
 112 160 l
 128 160 l
 128 208 l
 h
 </path>
-<path matrix="1 0 0 1 192 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.52108 0 0 0.692308 125.302 48" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path matrix="1 0 0 1 128 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.52108 0 0 0.692308 91.9526 48" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path fill="lightgray">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" fill="lightgray">
 112 208 m
 112 160 l
 128 160 l
 128 208 l
 h
 </path>
-<path matrix="1 0 0 1 64 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.52108 0 0 0.692308 58.6035 48" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path matrix="1 0 0 1 256 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.52108 0 0 0.692308 158.651 48" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path stroke="black" fill="white" dash="dashed">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 168 176 m
 192 176 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 232 176 m
 192 176 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2181 47.4864" stroke="black" fill="white" arrow="normal/tiny">
 288 168 m
 320 168 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 264 188 m
 320 188 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 112 188 m
 64 188 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 88 176 m
 64 176 l
 </path>
-<path stroke="black" fill="white" arrow="normal/normal">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 56 160 m
 336 160 l
 </path>
-<use matrix="1 0 0 1 0 16" name="mark/disk(sx)" pos="192 144" size="large" stroke="black"/>
-<path matrix="1 0 0 1 -32 0" stroke="black" fill="white">
-3.00307 0 0 3.00307 96 160 e
-</path>
-<path matrix="1 0 0 1 224 0" stroke="black" fill="white">
-3.00307 0 0 3.00307 96 160 e
-</path>
-<group>
+<group matrix="0.52108 0 0 0.692308 25.2544 48">
 <group>
 <path stroke="black">
 80 164 m
@@ -389,97 +386,98 @@ h
 </path>
 </group>
 </group>
-<text matrix="1 0 0 1 0 4" transformations="translations" pos="192 144" stroke="black" type="label" width="4.86" height="3.864" depth="1.74" halign="center" valign="baseline" size="small" style="math">y</text>
-<text matrix="1 0 0 1 -128 4" transformations="translations" pos="192 144" stroke="black" type="label" width="24.797" height="5.782" depth="1.74" halign="center" valign="baseline" size="small" style="math">y - 2\varsigma</text>
-<text matrix="1 0 0 1 128 4" transformations="translations" pos="192 144" stroke="black" type="label" width="24.797" height="5.782" depth="1.74" halign="center" valign="baseline" size="small" style="math">y + 2\varsigma</text>
-<text matrix="1 0 0 1 -64 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y - \varsigma</text>
-<text matrix="1 0 0 1 64 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y + \varsigma</text>
-<text matrix="1 0 0 1 -24 4" transformations="translations" pos="192 144" stroke="black" type="label" width="6.751" height="7.132" depth="0.87" halign="center" valign="baseline" size="small" style="math">\varsigma&apos;</text>
-<path matrix="1 0 0 1 0 4" stroke="black" arrow="normal/tiny" rarrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 50.7692" stroke="black" arrow="normal/tiny" rarrow="normal/tiny">
 160 152 m
 176 152 l
 </path>
-<use name="mark/square(sx)" pos="96 172" size="normal" stroke="black"/>
-<use name="mark/square(sx)" pos="128 192" size="normal" stroke="black"/>
-<use name="mark/square(sx)" pos="256 192" size="normal" stroke="black"/>
-<use name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
-<use name="mark/square(sx)" pos="224 172" size="normal" stroke="black"/>
-<use name="mark/square(sx)" pos="288 172" size="normal" stroke="black"/>
-<path stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 80 0" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 144 0" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 176 12" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 200 -8" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 96 172 m
 64 172 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 128 192 m
 192 192 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 160 172 m
 192 172 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 224 172 m
 192 172 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.2544 48" stroke="black" fill="white" arrow="normal/tiny">
 256 192 m
 192 192 l
 </path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.52108 0 0 0.692308 25.211 48.5188" stroke="black" fill="white" arrow="normal/tiny">
 288 172 m
 320 172 l
 </path>
-<path matrix="1 0 0 1 48 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.52108 0 0 0.692308 50.2662 48" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path matrix="1 0 0 1 24 12" stroke="black" fill="white">
+<path matrix="0.52108 0 0 0.692308 133.639 48" stroke="black" fill="white" dash="dashed">
+64 208 m
+64 160 l
+</path>
+<text matrix="0.52108 0 0 0.692308 -3.74902 84.3044" transformations="translations" pos="192 144" stroke="black" type="label" width="4.681" height="6.23" depth="1.74" halign="center" valign="baseline" size="small" style="math">\zeta</text>
+<text matrix="0.52108 0 0 0.692308 -19.8825 81.4684" transformations="translations" pos="192 144" stroke="black" type="label" width="4.673" height="3.861" depth="0" halign="center" valign="baseline" size="small" style="math">z</text>
+<path matrix="1 0 0 1 -16.8243 -6.00862" stroke="black" fill="white">
 86.1771 177.833 m
 86.1771 174.167 l
 89.8229 174.167 l
 89.8229 177.833 l
 h
 </path>
-<path matrix="1 0 0 1 208 0" stroke="black" fill="white" dash="dashed">
-64 208 m
-64 160 l
+<path matrix="1 0 0 1 -4.28138 1.9167" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
 </path>
-<text matrix="1 0 0 1 -68 48" transformations="translations" pos="192 144" stroke="black" type="label" width="4.681" height="6.23" depth="1.74" halign="center" valign="baseline" size="small" style="math">\zeta</text>
-<text matrix="1 0 0 1 -76 40" transformations="translations" pos="192 144" stroke="black" type="label" width="4.673" height="3.861" depth="0" halign="center" valign="baseline" size="small" style="math">z</text>
+<path matrix="1 0 0 1 24.5933 -6.12534" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 58.1381 -6.20186" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 74.8091 1.96015" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 87.1542 -8.3547" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<use matrix="1 0 0 1 -84.7374 -4.75975" name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
+<use matrix="1 0 0 1 -68.1968 9.02234" name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
+<use matrix="1 0 0 1 -51.675 -4.82849" name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
+<use matrix="1 0 0 1 -18.4084 -4.97374" name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
+<use matrix="1 0 0 1 -1.71605 8.98927" name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
+<use matrix="1 0 0 1 15.163 -8.42024" name="mark/square(sx)" pos="160 172" size="normal" stroke="black"/>
+<path matrix="1 0 0 1 -37.3285 -1.72777" stroke="black" fill="white">
+3.00307 0 0 3.00307 96 160 e
+</path>
+<path matrix="1 0 0 1 96.068 -1.72777" stroke="black" fill="white">
+3.00307 0 0 3.00307 96 160 e
+</path>
+<use matrix="1 0 0 1 -66.8668 15.0908" name="mark/disk(sx)" pos="192 144" size="large" stroke="black"/>
 </page>
 </ipe>

@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70206" creator="Ipe 7.2.7">
-<info created="D:20180209141659" modified="D:20201106180328"/>
+<info created="D:20180209141659" modified="D:20201106192927"/>
 <preamble>\usepackage{amsmath,amssymb,bbm,bm}
-%\usepackage{libertine}
-%\usepackage[libertine]{newtxmath}</preamble>
+</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
 <path stroke="sym-stroke" fill="sym-stroke" pen="sym-pen">
@@ -258,114 +257,114 @@ h
 <page>
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
-<path layer="alpha" stroke="black" fill="white" arrow="normal/normal">
+<text layer="alpha" matrix="0.517315 0 0 1 26.4591 4" transformations="translations" pos="192 144" stroke="black" type="label" width="4.86" height="3.864" depth="1.74" halign="center" valign="baseline" size="small" style="math">y</text>
+<text matrix="0.517315 0 0 1 -39.7573 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y - \varsigma</text>
+<text matrix="0.517315 0 0 1 92.6754 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y + \varsigma</text>
+<group matrix="1 0 0 0.692308 0 48">
+<path matrix="0.517315 0 0 1 26.4591 0" stroke="black" fill="white" arrow="normal/tiny">
 56 160 m
 336 160 l
 </path>
-<path matrix="1 0 0 1 -32 0" stroke="black" fill="white">
-3.00307 0 0 3.00307 96 160 e
-</path>
-<path matrix="1 0 0 1 224 0" stroke="black" fill="black">
-3.00307 0 0 3.00307 96 160 e
-</path>
-<text matrix="1 0 0 1 0 4" transformations="translations" pos="192 144" stroke="black" type="label" width="4.86" height="3.864" depth="1.74" halign="center" valign="baseline" size="small" style="math">y</text>
-<text matrix="1 0 0 1 -128 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y - \varsigma</text>
-<text matrix="1 0 0 1 128 4" transformations="translations" pos="192 144" stroke="black" type="label" width="20.19" height="5.317" depth="1.74" halign="center" valign="baseline" size="small" style="math">y + \varsigma</text>
-<path matrix="1 0 0 1 -16 0" stroke="black">
+<path matrix="0.517315 0 0 1 18.182 0" stroke="black">
 208 164 m
 208 156 l
 </path>
-<group>
-<path matrix="1 0 0 1 128 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.517315 0 0 1 92.6754 0" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path matrix="1 0 0 1 256 0" stroke="black" fill="white" dash="dashed">
+<path matrix="0.517315 0 0 1 158.892 0" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path stroke="black" fill="white" dash="dashed">
+<path matrix="0.517315 0 0 1 26.4591 0" stroke="black" fill="white" dash="dashed">
 64 208 m
 64 160 l
 </path>
-<path matrix="1 0 0 1 0 4" stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.517315 0 0 1 26.4591 4" stroke="black" fill="white" arrow="normal/tiny">
 288 168 m
 320 168 l
 </path>
-<path matrix="1 0 0 1 0 -4" stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.517315 0 0 1 26.4591 -4" stroke="black" fill="white" arrow="normal/tiny">
 264 188 m
 320 188 l
 </path>
-<path matrix="1 0 0 1 0 -4" stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.517315 0 0 1 26.4591 -4" stroke="black" fill="white" arrow="normal/tiny">
 112 188 m
 64 188 l
 </path>
-<path matrix="1 0 0 1 0 -4" stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.517315 0 0 1 26.4591 -4" stroke="black" fill="white" arrow="normal/tiny">
 88 176 m
 64 176 l
 </path>
-<path matrix="1 0 0 1 0 -4" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 176 8" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 200 -4" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path matrix="1 0 0 1 24 8" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<text matrix="1 0 0 1 -24 52" transformations="translations" pos="192 144" stroke="black" type="label" width="4.673" height="3.861" depth="0" halign="center" valign="baseline" size="small" style="math">z</text>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<text matrix="0.517315 0 0 1 14.0435 52" transformations="translations" pos="192 144" stroke="black" type="label" width="4.673" height="3.861" depth="0" halign="center" valign="baseline" size="small" style="math">z</text>
+<path matrix="0.517315 0 0 1 26.4591 0" stroke="black" fill="white" arrow="normal/tiny">
 160 196 m
 64 196 l
 </path>
-<path matrix="1 0 0 1 72 20" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.517315 0 0 1 26.4591 0" stroke="black" fill="white" arrow="normal/tiny">
 192 208 m
 320 208 l
 </path>
-<path matrix="1 0 0 1 104 32" stroke="black" fill="white">
-86.1771 177.833 m
-86.1771 174.167 l
-89.8229 174.167 l
-89.8229 177.833 l
-h
-</path>
-<path stroke="black" fill="white" arrow="normal/tiny">
+<path matrix="0.517315 0 0 1 26.4591 0" stroke="black" fill="white" arrow="normal/tiny">
 224 196 m
 320 196 l
 </path>
-<path matrix="1 0 0 1 136 20" stroke="black" fill="white">
+</group>
+<path matrix="1 0 0 1 -36.4327 -1.23077" stroke="black" fill="white">
+3.00307 0 0 3.00307 96 160 e
+</path>
+<path matrix="1 0 0 1 96.095 -0.782769" stroke="black" fill="black">
+3.00307 0 0 3.00307 96 160 e
+</path>
+<path matrix="1 0 0 1 -16.4128 -8.81641" stroke="black" fill="white">
 86.1771 177.833 m
 86.1771 174.167 l
 89.8229 174.167 l
 89.8229 177.833 l
 h
 </path>
-</group>
+<path matrix="1 0 0 1 -3.63735 -0.440177" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 20.9586 7.69852" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 37.8174 15.8141" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 54.3307 7.7678" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 75.0478 -0.521828" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
+<path matrix="1 0 0 1 87.4694 -9.07703" stroke="black" fill="white">
+86.1771 177.833 m
+86.1771 174.167 l
+89.8229 174.167 l
+89.8229 177.833 l
+h
+</path>
 </page>
 </ipe>
