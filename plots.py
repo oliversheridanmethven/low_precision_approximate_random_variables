@@ -193,8 +193,9 @@ def produce_geometric_brownian_motion_paths(dt, approx=None, precision=None):
 def plot_error_model_2_way_variances(savefig=False, plot_from_json=True):
     approximation_terms = ['approximation', 'kahan']
     if plot_from_json:
-        with open('two_way_variances.pdf', "r") as file:
+        with open('two_way_variances.json', "r") as file:
             results = json.load(file)
+        results = {k: {x: {float(a): b for a, b in y.items()} for x, y in v.items()} for k, v in results.items()}
     else:
         deltas = [2.0 ** -i for i in range(0, 6)]
         precisions = [7, 10, 16, 23]
@@ -248,6 +249,9 @@ def plot_error_model_2_way_variances(savefig=False, plot_from_json=True):
 
 
 def plot_error_model_4_way_variances(savefig=False, plot_from_json=True):
+    terms = ['originals', 'corrections_32', 'corrections_16', 'corrections_16_kahan', 'approx_estimator_16', 'approx_estimator_16_kahan']
+    min_dts = {term: 2.0 ** -l for term, l in zip(terms, [20, 20, 8, 12, 12, 15])}
+    markers = {term: m for term, m in zip(terms, ['o', 'v', 's', 'd', 'x', '^'])}
     if plot_from_json:
         with open('four_way_variance.json', "r") as file:
             results = json.load(file)
@@ -262,9 +266,6 @@ def plot_error_model_4_way_variances(savefig=False, plot_from_json=True):
         corrections_16_kahan = (df['x_fine_exact_64'] - df['x_coarse_exact_64']) - (df['x_fine_approx_16_kahan'] - df['x_coarse_approx_16_kahan'])
         approx_estimator_16 = df['x_fine_approx_16'] - df['x_coarse_approx_16']
         approx_estimator_16_kahan = df['x_fine_approx_16_kahan'] - df['x_coarse_approx_16_kahan']
-        terms = ['originals', 'corrections_32', 'corrections_16', 'corrections_16_kahan', 'approx_estimator_16', 'approx_estimator_16_kahan']
-        min_dts = {term: 2.0 ** -l for term, l in zip(terms, [20, 20, 8, 12, 12, 15])}
-        markers = {term: m for term, m in zip(terms, ['o', 'v', 's', 'd', 'x', '^'])}
         dfs = [pd.concat([dt, df], axis=1) for df in [originals, corrections_32, corrections_16, corrections_16_kahan, approx_estimator_16, approx_estimator_16_kahan]]
         for df in dfs: df.columns = ['dt', 'correction']
         results = {term: df for term, df in zip(terms, dfs)}
@@ -292,6 +293,9 @@ def plot_error_model_4_way_variances(savefig=False, plot_from_json=True):
 
 
 def plot_error_model_4_way_savings(savefig=False, plot_from_json=True):
+    terms = ['originals', 'corrections_32', 'corrections_16', 'corrections_16_kahan', 'approx_estimator_16', 'approx_estimator_16_kahan']
+    min_dts = {term: 2.0 ** -l for term, l in zip(terms, [20, 20, 8, 12, 12, 15])}
+    markers = {term: m for term, m in zip(terms, ['o', 'v', 's', 'd', 'x', '^'])}
     if plot_from_json:
         with open('four_way_savings.json', "r") as file:
             savings = json.load(file)
@@ -306,9 +310,6 @@ def plot_error_model_4_way_savings(savefig=False, plot_from_json=True):
         corrections_16_kahan = (df['x_fine_exact_64'] - df['x_coarse_exact_64']) - (df['x_fine_approx_16_kahan'] - df['x_coarse_approx_16_kahan'])
         approx_estimator_16 = df['x_fine_approx_16'] - df['x_coarse_approx_16']
         approx_estimator_16_kahan = df['x_fine_approx_16_kahan'] - df['x_coarse_approx_16_kahan']
-        terms = ['originals', 'corrections_32', 'corrections_16', 'corrections_16_kahan', 'approx_estimator_16', 'approx_estimator_16_kahan']
-        min_dts = {term: 2.0 ** -l for term, l in zip(terms, [20, 20, 8, 12, 12, 15])}
-        markers = {term: m for term, m in zip(terms, ['o', 'v', 's', 'd', 'x', '^'])}
         dfs = [pd.concat([dt, df], axis=1) for df in [originals, corrections_32, corrections_16, corrections_16_kahan, approx_estimator_16, approx_estimator_16_kahan]]
         for df in dfs: df.columns = ['dt', 'correction']
         results = {term: df for term, df in zip(terms, dfs)}
@@ -358,3 +359,8 @@ def speed_up_and_efficiency(V, c):
 
 if __name__ == '__main__':
     plot_params = dict(savefig=True, plot_from_json=True)
+    plot_piecewise_linear_gaussian_approximation(**plot_params)
+    plot_piecewise_linear_gaussian_approximation_pdf(**plot_params)
+    plot_error_model_2_way_variances(**plot_params)
+    plot_error_model_4_way_variances(**plot_params)
+    plot_error_model_4_way_savings(**plot_params)
